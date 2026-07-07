@@ -20,11 +20,15 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // Smaller phones do far less work per frame — the full-resolution point
-    // cloud is what pegs a mobile core (and can crash the tab). Halving the
-    // grid roughly quarters the per-frame cost while staying crisp at size.
+    // On phones we render the globe as a single static frame instead of
+    // animating it. Mobile Safari is very slow at per-frame fillText (this
+    // scene rasterizes ~110 text rows every frame through a sub-pixel scale),
+    // and a few seconds of that sustained load makes iOS reload/kill the tab.
+    // A static globe still shows the continents and the Manila marker.
     const isSmall = window.matchMedia("(max-width: 768px)").matches;
+    const staticOnly = prefersReduced || isSmall;
 
+    // Lower the point-cloud resolution on phones too — cheaper single frame.
     const COLS = 110;
     const ROWS = 110;
     const LON_STEPS = isSmall ? 220 : 340;
@@ -125,7 +129,7 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
     }
 
     const TWO_PI = Math.PI * 2;
-    const ROT_SPEED = prefersReduced ? 0 : 0.26; // radians per second
+    const ROT_SPEED = staticOnly ? 0 : 0.26; // radians per second
     // Start with Manila facing the viewer
     let theta = ((-manilaLon % TWO_PI) + TWO_PI) % TWO_PI;
     let t = 0;
@@ -296,9 +300,9 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
         setFont();
       }
 
-      // With reduced motion the scene is static, so one frame is enough —
-      // don't keep the loop (and the CPU) alive.
-      if (prefersReduced || !running) {
+      // On phones / reduced motion the scene is static, so one frame is
+      // enough — don't keep the loop (and the CPU) alive.
+      if (staticOnly || !running) {
         running = false;
         return;
       }
