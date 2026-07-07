@@ -1,26 +1,6 @@
 # Ruzly — Portfolio
 
-Black & white single-page portfolio. Next.js 15 · React 19 · TypeScript · Tailwind CSS v4 · Motion (Framer Motion).
-
-## Run locally (Windows / PowerShell)
-
-```powershell
-npm install
-npm run dev
-```
-
-Open http://localhost:3000
-
-## Deploy to Vercel
-
-```powershell
-git init
-git add .
-git commit -m "portfolio v1"
-```
-
-Push to GitHub (`yslruzly`), then import the repo at vercel.com — zero config needed.
-
+Black & white single-page portfolio. Next.js 15 · React 19 · TypeScript · Tailwind CSS v4 
 ## Customize
 
 - **Projects & links** → `lib/data.ts` (edit `projects`, `stackMarquee`, and `links.email`)
