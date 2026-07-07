@@ -2,7 +2,7 @@
 
 My personal portfolio site — a developer portfolio with a macOS-style terminal hero, an ASCII globe, an embedded chatbot, and a few interactive widgets. Built with Next.js 15 and the App Router.
 
-**Live:** [add your Vercel URL here]
+**Live:** [macatula-ruzly.vercel.app]
 
 ![Portfolio preview](public/images/Portfolio.png)
 
