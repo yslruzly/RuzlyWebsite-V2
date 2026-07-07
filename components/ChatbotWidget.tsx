@@ -32,7 +32,7 @@ const ChatbotWidget: React.FC = () => {
       {chatOpen && (
         <div style={{
           position: "fixed", bottom: "10rem", right: "2rem", zIndex: 150,
-          width: 320, height: 420,
+          width: "min(320px, calc(100vw - 2.5rem))", height: 420,
           background: "#0d0d0d",
           border: "1px solid #2a2a2a",
           borderRadius: 10,

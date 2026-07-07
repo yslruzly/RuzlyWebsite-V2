@@ -20,10 +20,15 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
+    // Smaller phones do far less work per frame — the full-resolution point
+    // cloud is what pegs a mobile core (and can crash the tab). Halving the
+    // grid roughly quarters the per-frame cost while staying crisp at size.
+    const isSmall = window.matchMedia("(max-width: 768px)").matches;
+
     const COLS = 110;
     const ROWS = 110;
-    const LON_STEPS = 340;
-    const LAT_STEPS = 210;
+    const LON_STEPS = isSmall ? 220 : 340;
+    const LAT_STEPS = isSmall ? 130 : 210;
     const N = LON_STEPS * LAT_STEPS;
 
     const bin = atob(MASK_B64);
@@ -127,16 +132,42 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
     let lastNow: number | null = null;
     let raf = 0;
 
+    // Only animate while the globe is actually on screen and the tab is
+    // visible. It lives at the very bottom of the page, so without this the
+    // heavy loop would run from first paint — a real battery/crash risk on
+    // mobile — even though nobody can see it yet.
+    let inView = false;
+    let running = false;
+
+    const start = () => {
+      if (running || document.hidden || !inView) return;
+      running = true;
+      lastNow = null;
+      raf = requestAnimationFrame(frame);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
     const onVisibility = () => {
-      if (!document.hidden) {
-        lastNow = null;
-        raf = requestAnimationFrame(frame);
-      }
+      if (document.hidden) stop();
+      else start();
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) start();
+        else stop();
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(canvas);
+
     function frame(now: number) {
-      if (!ctx) return;
+      if (!ctx || !running) return;
       if (lastNow === null) lastNow = now;
       let dt = (now - lastNow) / 1000;
       lastNow = now;
@@ -265,15 +296,20 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
         setFont();
       }
 
+      // With reduced motion the scene is static, so one frame is enough —
+      // don't keep the loop (and the CPU) alive.
+      if (prefersReduced || !running) {
+        running = false;
+        return;
+      }
       raf = requestAnimationFrame(frame);
     }
 
-    raf = requestAnimationFrame(frame);
-
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibility);
+      io.disconnect();
     };
   }, []);
 

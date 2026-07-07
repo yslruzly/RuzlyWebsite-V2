@@ -78,6 +78,9 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--color-ink);
+  /* clip (not hidden) so the root never scrolls sideways from the marquee /
+     wide children, while keeping position: sticky working in Experience */
+  overflow-x: clip;
 }
 
 body {
@@ -85,7 +88,7 @@ body {
   color: var(--color-paper);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 ::selection {

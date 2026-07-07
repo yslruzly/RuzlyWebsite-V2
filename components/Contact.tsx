@@ -36,7 +36,7 @@ export default function Contact() {
                 github.com/yslruzly ↗
               </MagneticButton>
             </div>
-            <div className="mt-8 grid w-fit grid-flow-col grid-rows-2 gap-x-8 gap-y-1">
+            <div className="mt-8 grid w-fit grid-cols-1 gap-y-2 sm:grid-flow-col sm:grid-rows-2 sm:gap-x-8 sm:gap-y-1">
               {socials.map(({ label, href, Icon }) => {
                 const external = href.startsWith("http");
                 return (
