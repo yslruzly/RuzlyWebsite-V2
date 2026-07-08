@@ -74,7 +74,7 @@ export default function Experience() {
       <div ref={outerRef} className="relative h-[260svh]">
         <div ref={stickyRef} className="sticky top-0 flex h-svh items-center overflow-hidden">
           <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-            <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-paper uppercase">
+            <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">
               <Coffee size={14} strokeWidth={1.5} aria-hidden="true" />
               Experience
             </p>

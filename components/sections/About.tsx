@@ -9,7 +9,7 @@ export default function About() {
     <section id="about" className="border-t border-line">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
         <Reveal>
-          <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-paper uppercase">
+          <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">
             <BookOpenText size={14} strokeWidth={1.5} aria-hidden="true" />
             About
           </p>
@@ -26,15 +26,15 @@ export default function About() {
         <div className="mt-12 grid items-center gap-10 lg:grid-cols-[1fr_1.45fr]">
           <Reveal>
             <div className="space-y-4 font-jet text-base leading-relaxed text-mist">
+              <p>➜ ~ whoami</p>
               <p>
-                I&apos;m John Ruzly Macatula — Aspiring software engineer who
-                believes great software is equal parts logic and craft. A
+                I&apos;m John Ruzly Macatula — A
                 4th-year BS Computer Science Student at{" "}
                 <CampusPreview
                   label="UE - Manila"
                   domain="ue.edu.ph"
                   title="University of the East – Manila"
-                  description="University of the East – Manila, where I study computer science."
+                  description="where I study computer science."
                   image="/images/UE-manila-campus.png"
                 />{" "}
                 with a strong passion for technology, designing and

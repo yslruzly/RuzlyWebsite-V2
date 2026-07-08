@@ -13,10 +13,12 @@
   --animate-caret: caret-blink 0.85s step-end infinite;
 
   @keyframes caret-blink {
+
     0%,
     100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0;
     }
@@ -26,6 +28,7 @@
     from {
       transform: translateX(0);
     }
+
     to {
       transform: translateX(-50%);
     }
@@ -36,10 +39,12 @@
       transform: scale(1);
       opacity: 0.9;
     }
+
     70% {
       transform: scale(3.2);
       opacity: 0;
     }
+
     100% {
       transform: scale(3.2);
       opacity: 0;
@@ -59,6 +64,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -66,10 +72,12 @@
 }
 
 @keyframes blink {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.35;
   }
@@ -110,8 +118,36 @@ body {
 .hero-photo {
   transition: filter 0.5s ease;
 }
+
 html.light .hero-photo {
   filter: grayscale(0);
+}
+
+.hero-terminal {
+  background-color: #17171b;
+}
+
+.hero-terminal-bar {
+  background-color: #131314;
+}
+
+html.light .hero-terminal {
+  background-color: #f4f4f5;
+}
+
+html.light .hero-terminal-bar {
+  background-color: #ececef;
+}
+
+/* Section eyebrow titles (ABOUT, SKILLS, SELECTED WORK, EXPERIENCE, CONTACT):
+   green accent in dark mode only; normal color in light mode.
+   Change #4ade80 below to adjust the green. */
+.section-eyebrow {
+  color: #34d399;
+}
+
+html.light .section-eyebrow {
+  color: var(--color-paper);
 }
 
 ::selection {
@@ -123,13 +159,16 @@ html.light .hero-photo {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-ink);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-line);
   border-radius: 8px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-ash);
 }
@@ -144,6 +183,7 @@ html.light .hero-photo {
   html {
     scroll-behavior: auto;
   }
+
   *,
   *::before,
   *::after {
@@ -167,14 +207,12 @@ html.light .hero-photo {
   z-index: 40;
   border-radius: inherit;
   padding: 1.5px;
-  background: conic-gradient(
-    from var(--beam-angle),
-    transparent 0deg,
-    transparent 250deg,
-    var(--color-mist) 320deg,
-    var(--color-paper) 350deg,
-    transparent 360deg
-  );
+  background: conic-gradient(from var(--beam-angle),
+      transparent 0deg,
+      transparent 250deg,
+      var(--color-mist) 320deg,
+      var(--color-paper) 350deg,
+      transparent 360deg);
   /* show only the border ring by masking out the inner content box */
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,

@@ -271,7 +271,7 @@ export default function Projects() {
   return (
     <section id="projects" className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
       <Reveal>
-        <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-paper uppercase">
+        <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">
           <Folders size={14} strokeWidth={1.5} aria-hidden="true" />
           Selected work
         </p>

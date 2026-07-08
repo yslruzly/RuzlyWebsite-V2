@@ -7,10 +7,10 @@ import ThemeToggle from "./ThemeToggle";
 export default function HeroTerminal({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-line bg-surface shadow-[0_16px_48px_rgba(0,0,0,0.6)] ${className}`}
+      className={`hero-terminal overflow-hidden rounded-xl border border-line shadow-[0_16px_48px_rgba(0,0,0,0.6)] ${className}`}
     >
       {/* title bar */}
-      <div className="flex items-center gap-2 border-b border-line bg-ink/60 px-4 py-2.5">
+      <div className="hero-terminal-bar flex items-center gap-2 border-b border-line px-4 py-2.5">
         <span className="h-3 w-3 shrink-0 rounded-full bg-[#ff5f57]" />
         <span className="h-3 w-3 shrink-0 rounded-full bg-[#febc2e]" />
         <span className="h-3 w-3 shrink-0 rounded-full bg-[#28c840]" />
@@ -32,7 +32,7 @@ export default function HeroTerminal({ className = "" }: { className?: string })
       </div>
 
       {/* bottom bar: theme controls (dark / light / system) */}
-      <div className="flex items-center gap-3 border-t border-line bg-ink/60 px-4 py-2.5">
+      <div className="hero-terminal-bar flex items-center gap-3 border-t border-line px-4 py-2.5">
         <span className="mr-auto hidden font-mono text-[10px] tracking-widest text-ash uppercase sm:inline">
           Theme
         </span>

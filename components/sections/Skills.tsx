@@ -17,7 +17,7 @@ export default function Skills() {
     <section id="skills" className="border-t border-line bg-surface/40">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
         <Reveal>
-          <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-paper uppercase">
+          <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">
             <FlaskConical size={14} strokeWidth={1.5} aria-hidden="true" />
             Skills
           </p>
