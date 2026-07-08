@@ -150,6 +150,44 @@ html.light .section-eyebrow {
   color: var(--color-paper);
 }
 
+/* GitHub activity heatmap: green intensity scale, theme-aware. */
+.gh-cell {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.gh-lvl-0 {
+  background-color: #1b1b21;
+}
+.gh-lvl-1 {
+  background-color: #133a2a;
+}
+.gh-lvl-2 {
+  background-color: #1c6b44;
+}
+.gh-lvl-3 {
+  background-color: #24a366;
+}
+.gh-lvl-4 {
+  background-color: #34d399;
+}
+html.light .gh-lvl-0 {
+  background-color: #e4e4e7;
+}
+html.light .gh-lvl-1 {
+  background-color: #bbf7d0;
+}
+html.light .gh-lvl-2 {
+  background-color: #6ee7b7;
+}
+html.light .gh-lvl-3 {
+  background-color: #34d399;
+}
+html.light .gh-lvl-4 {
+  background-color: #059669;
+}
+
 ::selection {
   background: var(--color-paper);
   color: var(--color-ink);

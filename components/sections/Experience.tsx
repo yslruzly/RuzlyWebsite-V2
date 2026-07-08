@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Coffee } from "lucide-react";
 import { EXPERIENCES } from "@/lib/data";
+import GitHubHeatmap from "@/components/ui/GitHubHeatmap";
 
 /**
  * Pinned scroll section: the content sticks in the viewport while the
@@ -87,7 +88,8 @@ export default function Experience() {
               </span>
             </div>
 
-            <div ref={timelineRef} className="relative mt-10 pl-8 sm:mt-14 sm:pl-10">
+            <div className="mt-10 grid gap-12 sm:mt-14 lg:grid-cols-2 lg:items-center lg:gap-8">
+            <div ref={timelineRef} className="relative pl-8 sm:pl-10">
               {/* track */}
               <div className="absolute top-0 bottom-0 left-[9px] w-px bg-line sm:left-[11px]" />
               {/* scroll-driven fill */}
@@ -135,6 +137,12 @@ export default function Experience() {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+
+              {/* right column: mini GitHub contribution heatmap (desktop) */}
+              <div className="hidden lg:flex lg:justify-center">
+                <GitHubHeatmap username="yslruzly" />
               </div>
             </div>
           </div>
