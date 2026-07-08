@@ -2,8 +2,8 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { Copy, Mail } from "lucide-react";
-import HeroTerminal from "./HeroTerminal";
-import { MagneticButton, SplitWords, TypewriterRotate } from "./motion-primitives";
+import HeroTerminal from "@/components/ui/HeroTerminal";
+import { MagneticButton, SplitWords, TypewriterRotate } from "@/components/ui/motion-primitives";
 
 export default function Hero() {
   const reduce = useReducedMotion();

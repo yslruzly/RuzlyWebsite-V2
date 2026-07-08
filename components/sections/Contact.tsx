@@ -1,7 +1,7 @@
 import { Send, Linkedin, Facebook, Github, Mail } from "lucide-react";
-import AsciiGlobe from "./AsciiGlobe";
+import AsciiGlobe from "@/components/ui/AsciiGlobe";
 import { links } from "@/lib/data";
-import { MagneticButton, Reveal } from "./motion-primitives";
+import { MagneticButton, Reveal } from "@/components/ui/motion-primitives";
 
 // Left column (github, email), then right column (linkedin, facebook) —
 // filled column-by-column via grid-flow-col + grid-rows-2 below.

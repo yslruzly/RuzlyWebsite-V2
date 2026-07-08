@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Github, Globe, Folders, X } from "lucide-react";
 import { projects, type Project } from "@/lib/data";
-import { Reveal } from "./motion-primitives";
+import { Reveal } from "@/components/ui/motion-primitives";
 
 function SpotlightCard({
   project,

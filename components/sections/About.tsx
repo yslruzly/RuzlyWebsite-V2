@@ -1,8 +1,8 @@
 import { BookOpenText } from "lucide-react";
-import CampusPreview from "./CampusPreview";
-import { Reveal, TypewriterLoop } from "./motion-primitives";
-import WebMacbookChatbot from "./WebMacbookChatbot";
-import MobileMacbookChatbot from "./MobileMacbookChatbot";
+import CampusPreview from "@/components/ui/CampusPreview";
+import { Reveal, TypewriterLoop } from "@/components/ui/motion-primitives";
+import WebMacbookChatbot from "@/components/ui/WebMacbookChatbot";
+import MobileMacbookChatbot from "@/components/ui/MobileMacbookChatbot";
 
 export default function About() {
   return (

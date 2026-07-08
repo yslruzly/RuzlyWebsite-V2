@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FlaskConical } from "lucide-react";
 import { SKILLS } from "@/lib/data";
 import { TECH_ICONS } from "@/lib/tech-icons";
-import { Reveal } from "./motion-primitives";
+import { Reveal } from "@/components/ui/motion-primitives";
 
 /**
  * Skills as full-width editorial rows. Hovering a row inverts it
