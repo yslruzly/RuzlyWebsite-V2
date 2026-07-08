@@ -5,6 +5,7 @@ import {
   Pencil,
   Sprout,
   Computer,
+  CandlestickChart,
   type LucideIcon,
 } from "lucide-react";
 
@@ -119,15 +120,17 @@ export const projects: Project[] = [
     live: "https://ruzly-macatula.vercel.app",
   },
   {
-    slug: "pillars-of-wisdom",
-    name: "Pillars of Wisdom",
-    tagline: "Ancient philosophy, explored",
+    slug: "pipwiseforex",
+    name: "PipWiseForex",
+    tagline: "Read forex charts, candle by candle",
     description:
-      "Exploring the foundational ideas of ancient Greek and Roman philosophy through an interactive web experience.",
-    stack: ["Next.js", "React", "TypeScript", "Tailwind", "Firebase", "Vercel"],
-    kind: "Web",
-    Icon: Computer,
+      "A free, demo-first forex education site that teaches chart reading candle by candle — no signup walls, no signal selling, no hype.",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    kind: "Web / EdTech",
+    image: "/images/PipWiseForex.png",
+    Icon: CandlestickChart,
     github: "https://github.com/yslruzly",
+    live: "https://pipwise-forex.vercel.app",
   },
   {
     slug: "archiboardph",
