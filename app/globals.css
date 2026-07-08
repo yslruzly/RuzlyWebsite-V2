@@ -83,12 +83,35 @@ html {
   overflow-x: clip;
 }
 
+/* Light theme: invert the palette when <html> carries the `light` class
+   (set by ThemeToggle / the no-flash script in layout). All Tailwind color
+   utilities read these vars, so overriding them here recolors the whole UI. */
+html.light {
+  --color-ink: #ffffff;
+  --color-paper: #0a0a0b;
+  --color-mist: #52525b;
+  --color-ash: #6b7280;
+  --color-line: #e4e4e7;
+  --color-surface: #f4f4f5;
+}
+
 body {
   background-color: var(--color-ink);
   color: var(--color-paper);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Hero portrait is grayscale in dark mode; show its real colors in light. */
+.hero-photo {
+  transition: filter 0.5s ease;
+}
+html.light .hero-photo {
+  filter: grayscale(0);
 }
 
 ::selection {

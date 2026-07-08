@@ -28,9 +28,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${GeistSans.variable} ${GeistMono.variable} ${jetbrainsMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
     >
       <body>
+        {/* Apply the saved theme before paint to avoid a light/dark flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme')||'dark';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var light=t==='light'||(t==='system'&&!d);document.documentElement.classList.toggle('light',light);}catch(e){}})();`,
+          }}
+        />
         {children}
       </body>
     </html>

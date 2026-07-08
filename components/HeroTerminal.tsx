@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import ThemeToggle from "./ThemeToggle";
 
 /** Terminal window framing John's photo — hero visual. */
 export default function HeroTerminal({ className = "" }: { className?: string }) {
@@ -26,8 +27,16 @@ export default function HeroTerminal({ className = "" }: { className?: string })
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 448px"
-          className="object-cover grayscale"
+          className="hero-photo object-cover grayscale"
         />
+      </div>
+
+      {/* bottom bar: theme controls (dark / light / system) */}
+      <div className="flex items-center gap-3 border-t border-line bg-ink/60 px-4 py-2.5">
+        <span className="mr-auto hidden font-mono text-[10px] tracking-widest text-ash uppercase sm:inline">
+          Theme
+        </span>
+        <ThemeToggle />
       </div>
     </div>
   );
