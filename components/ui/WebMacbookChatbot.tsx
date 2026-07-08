@@ -39,6 +39,56 @@ function getBotReply(input: string): string {
   return BOT_REPLIES.default;
 }
 
+/* ══════════ TYPING TEST CONFIG ══════════ */
+const TEST_DURATION = 15;          // seconds
+const HIGH_SCORE = 131;            // wpm
+const HIGH_SCORE_HOLDER = "ruzly";
+
+const WORD_POOL = [
+  "the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "with",
+  "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which",
+  "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if",
+  "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into",
+  "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see",
+  "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over",
+  "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look",
+  "before", "great", "back", "through", "long", "where", "much", "should", "well", "people",
+  "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high",
+  "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell",
+  "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call",
+  "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same",
+  "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want",
+  "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home",
+  "interest", "large", "person", "end", "open", "public", "follow", "during", "present",
+  "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word",
+  "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run",
+  "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change",
+  "help", "line", "therefore", "always", "night", "live", "power", "though", "story", "young",
+];
+
+/* monkeytype-ish palette */
+const MT_TEXT = "#d1d0c5";   // typed correct
+const MT_SUB = "#646669";    // untyped
+const MT_ERROR = "#ca4754";  // typed wrong
+const MT_ACCENT = "#e2b714"; // caret / accent
+const TIMER_COLOR = "#34d399"; // countdown
+const LINE_H = 36;           // px per line of words
+const VISIBLE_LINES = 3;
+
+function makePassage(count = 70): string {
+  const out: string[] = [];
+  let prev = "";
+  for (let i = 0; i < count; i++) {
+    let w = WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)];
+    while (w === prev) w = WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)];
+    prev = w;
+    out.push(w);
+  }
+  return out.join(" ");
+}
+
+type TestStatus = "ready" | "running" | "done";
+
 const MacbookChatbot: FC = () => {
   const [lines, setLines] = useState<ChatLine[]>([
     { type: "system", text: "Last login: Fri Jul 1 09:00:00 on ttys001", id: 0 },
@@ -55,10 +105,24 @@ const MacbookChatbot: FC = () => {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
 
+  /* ── typing test state ── */
+  const [testOpen, setTestOpen] = useState(false);
+  const [testStatus, setTestStatus] = useState<TestStatus>("ready");
+  const [passage, setPassage] = useState("");
+  const [typed, setTyped] = useState("");
+  const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
+  const [result, setResult] = useState<{ wpm: number; accuracy: number } | null>(null);
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(10);
   const desktopRef = useRef<HTMLDivElement>(null);
+  const testInputRef = useRef<HTMLInputElement>(null);
+  const typedRef = useRef("");
+  const passageRef = useRef("");
+  const closeTestRef = useRef<() => void>(() => { });
+  const caretRef = useRef<HTMLSpanElement>(null);
+  const [lineShift, setLineShift] = useState(0);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
@@ -124,11 +188,107 @@ const MacbookChatbot: FC = () => {
     setLines(prev => [...prev, { type, text, id: idRef.current++ }]);
   };
 
+  /* ══════════ TYPING TEST LOGIC ══════════ */
+  const openTest = () => {
+    const p = makePassage();
+    passageRef.current = p;
+    typedRef.current = "";
+    setPassage(p);
+    setTyped("");
+    setLineShift(0);
+    setTimeLeft(TEST_DURATION);
+    setResult(null);
+    setTestStatus("ready");
+    setTestOpen(true);
+    setTimeout(() => testInputRef.current?.focus(), 80);
+  };
+
+  // keep the active line centred, monkeytype-style
+  useEffect(() => {
+    if (!testOpen) return;
+    const el = caretRef.current;
+    if (!el) return;
+    setLineShift(Math.max(0, el.offsetTop - LINE_H));
+  }, [typed, testOpen, passage]);
+
+  // tab to restart (works during the run and on the result screen)
+  useEffect(() => {
+    if (!testOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        openTest();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closeTestRef.current();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [testOpen]);
+
+  // countdown + auto-finish
+  useEffect(() => {
+    if (testStatus !== "running") return;
+    const started = Date.now();
+    const id = setInterval(() => {
+      const remaining = TEST_DURATION - (Date.now() - started) / 1000;
+      if (remaining <= 0) {
+        clearInterval(id);
+        setTimeLeft(0);
+
+        const t = typedRef.current;
+        const p = passageRef.current;
+        let correct = 0;
+        for (let i = 0; i < t.length; i++) if (t[i] === p[i]) correct++;
+        const wpm = Math.round((correct / 5) * (60 / TEST_DURATION));
+        const accuracy = t.length ? Math.round((correct / t.length) * 100) : 0;
+
+        setResult({ wpm, accuracy });
+        setTestStatus("done");
+      } else {
+        setTimeLeft(remaining);
+      }
+    }, 50);
+    return () => clearInterval(id);
+  }, [testStatus]);
+
+  const onTestChange = (v: string) => {
+    if (testStatus === "done") return;
+    if (testStatus === "ready" && v.length > 0) setTestStatus("running");
+    const capped = v.slice(0, passageRef.current.length);
+    typedRef.current = capped;
+    setTyped(capped);
+  };
+
+  const closeTest = () => {
+    setTestOpen(false);
+    setTestStatus("ready");
+    if (result) {
+      if (result.wpm > HIGH_SCORE) {
+        addLine("output", `🎉 ${result.wpm} WPM · ${result.accuracy}% accuracy — congrats, you beat ${HIGH_SCORE_HOLDER}'s ${HIGH_SCORE} WPM. New record holder.`);
+      } else {
+        addLine("output", `${result.wpm} WPM · ${result.accuracy}% accuracy — you didn't beat ${HIGH_SCORE_HOLDER}, ${HIGH_SCORE} WPM.`);
+      }
+    } else {
+      addLine("system", "Typing test aborted.");
+    }
+    setTimeout(() => inputRef.current?.focus(), 50);
+  };
+  closeTestRef.current = closeTest;
+
   const send = () => {
     const text = input.trim();
     if (!text || typing) return;
     setInput("");
     addLine("input", text);
+
+    // ── easter egg ──
+    if (text.toLowerCase().includes("keyboard")) {
+      addLine("system", `Launching typing test — ${TEST_DURATION}s. Record to beat: ${HIGH_SCORE_HOLDER} @ ${HIGH_SCORE} WPM.`);
+      openTest();
+      return;
+    }
 
     if (text.toLowerCase() === "help") {
       addLine("output", "Commands: skills · projects · experience · contact · hire · about · clear");
@@ -151,6 +311,8 @@ const MacbookChatbot: FC = () => {
   const termW = "calc(100% - 80px)";
   const termH = "calc(100% - 74px)"; // leave room for menubar + padding
 
+  const beatIt = !!result && result.wpm > HIGH_SCORE;
+
   return (
     <div style={{
       width: "100%",
@@ -164,6 +326,22 @@ const MacbookChatbot: FC = () => {
         @keyframes mbp-bounce {
           0%,60%,100%{transform:translateY(0);opacity:0.4}
           30%{transform:translateY(-5px);opacity:1}
+        }
+        @keyframes mbp-fadein {
+          from{opacity:0;transform:scale(0.97)}
+          to{opacity:1;transform:scale(1)}
+        }
+        @keyframes mbp-caret {
+          0%,49%{opacity:1}
+          50%,100%{opacity:0}
+        }
+        @keyframes mbp-twinkle {
+          0%,100%{opacity:0.55}
+          50%{opacity:1}
+        }
+        @keyframes mbp-twinkle-slow {
+          0%,100%{opacity:0.85}
+          50%{opacity:0.35}
         }
       `}</style>
 
@@ -265,32 +443,49 @@ const MacbookChatbot: FC = () => {
               style={{
                 width: "100%",
                 height: "380px",
-                background: "#000",
+                background: "radial-gradient(ellipse at 50% 30%, #10352a 0%, #0a2119 38%, #05120e 70%, #020806 100%)",
                 position: "relative",
                 overflow: "hidden",
                 cursor: "default",
               }}
-              onClick={() => inputRef.current?.focus()}
+              onClick={() => (testOpen ? testInputRef : inputRef).current?.focus()}
             >
-              {/* starfield */}
+              {/* star glow halos */}
               <div style={{
                 position: "absolute", inset: 0, pointerEvents: "none",
+                animation: "mbp-twinkle 5.5s ease-in-out infinite",
                 backgroundImage: `
-                  radial-gradient(1px 1px at 8% 18%, rgba(255,255,255,0.45) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 22% 65%, rgba(255,255,255,0.3) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 38% 12%, rgba(255,255,255,0.5) 0%,transparent 100%),
-                  radial-gradient(1.5px 1.5px at 52% 48%, rgba(255,255,255,0.2) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 67% 78%, rgba(255,255,255,0.35) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 80% 28%, rgba(255,255,255,0.4) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 91% 55%, rgba(255,255,255,0.28) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 14% 88%, rgba(255,255,255,0.38) 0%,transparent 100%),
-                  radial-gradient(1px 1px at 75% 92%, rgba(255,255,255,0.32) 0%,transparent 100%)
+                  radial-gradient(3px 3px at 8% 18%, rgba(150,255,205,0.30) 0%,transparent 70%),
+                  radial-gradient(3px 3px at 38% 12%, rgba(170,255,215,0.32) 0%,transparent 70%),
+                  radial-gradient(4px 4px at 52% 48%, rgba(120,235,185,0.22) 0%,transparent 70%),
+                  radial-gradient(3px 3px at 80% 28%, rgba(160,255,210,0.28) 0%,transparent 70%),
+                  radial-gradient(3px 3px at 14% 88%, rgba(150,255,205,0.26) 0%,transparent 70%),
+                  radial-gradient(3.5px 3.5px at 67% 78%, rgba(140,245,195,0.24) 0%,transparent 70%)
                 `,
               }} />
-              {/* nebula glow */}
+              {/* crisp stars */}
               <div style={{
                 position: "absolute", inset: 0, pointerEvents: "none",
-                background: "radial-gradient(ellipse at 72% 28%,rgba(50,15,75,0.4) 0%,transparent 52%), radial-gradient(ellipse at 18% 75%,rgba(8,25,65,0.35) 0%,transparent 48%)",
+                animation: "mbp-twinkle-slow 3.8s ease-in-out infinite",
+                backgroundImage: `
+                  radial-gradient(1px 1px at 8% 18%, rgba(235,255,245,0.95) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 22% 65%, rgba(210,255,235,0.6) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 38% 12%, rgba(255,255,255,1) 0%,transparent 100%),
+                  radial-gradient(1.5px 1.5px at 52% 48%, rgba(200,255,230,0.5) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 67% 78%, rgba(230,255,242,0.7) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 80% 28%, rgba(240,255,248,0.85) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 91% 55%, rgba(205,255,232,0.55) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 14% 88%, rgba(235,255,245,0.8) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 75% 92%, rgba(215,255,238,0.65) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 45% 82%, rgba(225,255,240,0.6) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 60% 20%, rgba(245,255,250,0.75) 0%,transparent 100%),
+                  radial-gradient(1px 1px at 30% 38%, rgba(200,250,228,0.5) 0%,transparent 100%)
+                `,
+              }} />
+              {/* aurora glow */}
+              <div style={{
+                position: "absolute", inset: 0, pointerEvents: "none",
+                background: "radial-gradient(ellipse at 72% 28%,rgba(24,140,95,0.30) 0%,transparent 55%), radial-gradient(ellipse at 18% 78%,rgba(12,80,70,0.32) 0%,transparent 52%), radial-gradient(ellipse at 45% 100%,rgba(40,200,130,0.10) 0%,transparent 45%)",
               }} />
 
               {/* ══ TERMINAL WINDOW ══ */}
@@ -339,7 +534,7 @@ const MacbookChatbot: FC = () => {
                     fontSize: "11px", color: "rgba(255,255,255,0.4)",
                     letterSpacing: "0.04em", pointerEvents: "none",
                   }}>
-                    zsh — ruzly@portfolio — 80×24
+                    {testOpen ? "typetest — ruzly@portfolio" : "zsh — ruzly@portfolio — 80×24"}
                   </div>
                 </div>
 
@@ -414,7 +609,7 @@ const MacbookChatbot: FC = () => {
                       value={input}
                       onChange={e => setInput(e.target.value)}
                       onKeyDown={e => e.key === "Enter" && send()}
-                      disabled={typing}
+                      disabled={typing || testOpen}
                       placeholder="ask me about ruzly..."
                       style={{
                         flex: 1, background: "transparent",
@@ -428,10 +623,213 @@ const MacbookChatbot: FC = () => {
                     <div style={{
                       width: "8px", height: "15px", background: "#ffffff",
                       borderRadius: "1px", flexShrink: 0,
-                      opacity: cursorOn && !typing ? 1 : 0,
+                      opacity: cursorOn && !typing && !testOpen ? 1 : 0,
                       boxShadow: "0 0 8px rgba(255,255,255,0.5)",
                     }} />
                   </div>
+
+                  {/* ══════════ TYPING TEST OVERLAY ══════════ */}
+                  {testOpen && (
+                    <div
+                      onClick={() => testInputRef.current?.focus()}
+                      style={{
+                        position: "absolute", inset: 0, zIndex: 20,
+                        background: "rgba(8,8,10,0.97)",
+                        backdropFilter: "blur(3px)",
+                        WebkitBackdropFilter: "blur(3px)",
+                        display: "flex", flexDirection: "column",
+                        padding: "14px 18px",
+                        animation: "mbp-fadein 0.18s ease-out",
+                        fontFamily: "'JetBrains Mono',monospace",
+                      }}
+                    >
+                      {/* header */}
+                      <div style={{
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                        flexShrink: 0, marginBottom: "10px",
+                      }}>
+                        <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.45)", letterSpacing: "0.05em" }}>
+                          TYPING TEST · {TEST_DURATION}s
+                        </span>
+                      </div>
+
+                      {testStatus !== "done" ? (
+                        <>
+                          <div style={{
+                            display: "flex", alignItems: "baseline", gap: "10px",
+                            marginBottom: "10px", flexShrink: 0,
+                          }}>
+                            <span style={{
+                              fontSize: "26px", fontWeight: 700,
+                              color: timeLeft <= 5 ? MT_ERROR : TIMER_COLOR,
+                              lineHeight: 1,
+                            }}>{Math.ceil(timeLeft)}</span>
+                            <span style={{ fontSize: "11px", color: MT_SUB }}>
+                              {testStatus === "ready" ? "start typing to begin…" : "go go go"}
+                            </span>
+                          </div>
+
+                          {/* passage — monkeytype style word grid */}
+                          <div style={{
+                            height: `${LINE_H * VISIBLE_LINES}px`,
+                            flexShrink: 0,
+                            overflow: "hidden",
+                            maskImage: "linear-gradient(180deg,#000 62%,transparent 100%)",
+                            WebkitMaskImage: "linear-gradient(180deg,#000 62%,transparent 100%)",
+                          }}>
+                            <div style={{
+                              position: "relative",
+                              transform: `translateY(-${lineShift}px)`,
+                              transition: "transform 0.18s ease",
+                              fontSize: "19px",
+                              lineHeight: `${LINE_H}px`,
+                              letterSpacing: "0.01em",
+                            }}>
+                              {(() => {
+                                let cursor = 0;
+                                return passage.split(" ").map((word, wi, arr) => {
+                                  const isLast = wi === arr.length - 1;
+                                  const chunk = isLast ? word : word + " ";
+                                  const start = cursor;
+                                  cursor += chunk.length;
+                                  return (
+                                    <span
+                                      key={wi}
+                                      style={{
+                                        display: "inline-block",
+                                        whiteSpace: "pre",
+                                      }}
+                                    >
+                                      {chunk.split("").map((ch, ci) => {
+                                        const i = start + ci;
+                                        const done = i < typed.length;
+                                        const correct = done && typed[i] === ch;
+                                        const isCaret = i === typed.length;
+                                        const wrongSpace = done && !correct && ch === " ";
+                                        return (
+                                          <span
+                                            key={i}
+                                            ref={isCaret ? caretRef : undefined}
+                                            style={{
+                                              color: done ? (correct ? MT_TEXT : MT_ERROR) : MT_SUB,
+                                              textDecoration: done && !correct ? "underline" : "none",
+                                              textDecorationColor: MT_ERROR,
+                                              background: wrongSpace ? "rgba(202,71,84,0.28)" : "transparent",
+                                              borderLeft: isCaret ? `2px solid ${MT_ACCENT}` : "2px solid transparent",
+                                              marginLeft: isCaret ? "-2px" : 0,
+                                              animation: isCaret ? "mbp-caret 1s step-end infinite" : "none",
+                                            }}
+                                          >
+                                            {ch}
+                                          </span>
+                                        );
+                                      })}
+                                    </span>
+                                  );
+                                });
+                              })()}
+                            </div>
+                          </div>
+
+                          {/* hidden capture input */}
+                          <input
+                            ref={testInputRef}
+                            value={typed}
+                            onChange={e => onTestChange(e.target.value)}
+                            onPaste={e => e.preventDefault()}
+                            autoComplete="off"
+                            spellCheck={false}
+                            style={{
+                              position: "absolute", opacity: 0,
+                              width: "1px", height: "1px",
+                              bottom: 0, left: 0, border: "none", outline: "none",
+                            }}
+                          />
+
+                          <div style={{
+                            fontSize: "10px", color: MT_SUB,
+                            flexShrink: 0, marginTop: "auto", paddingTop: "8px",
+                          }}>
+                            tab to restart · esc to quit
+                          </div>
+                        </>
+                      ) : (
+                        /* ── RESULT ── */
+                        <div style={{
+                          flex: 1, display: "flex", flexDirection: "column",
+                          alignItems: "center", justifyContent: "center", gap: "6px",
+                          animation: "mbp-fadein 0.25s ease-out",
+                        }}>
+                          <div style={{
+                            fontSize: "44px", fontWeight: 700, lineHeight: 1,
+                            color: beatIt ? "#27c060" : "#ffffff",
+                            textShadow: beatIt ? "0 0 24px rgba(39,192,96,0.45)" : "none",
+                          }}>
+                            {result?.wpm}<span style={{ fontSize: "15px", opacity: 0.5 }}> wpm</span>
+                          </div>
+                          <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
+                            {result?.accuracy}% accuracy · {TEST_DURATION}s
+                          </div>
+
+                          <div style={{
+                            marginTop: "10px", padding: "8px 16px",
+                            borderRadius: "7px",
+                            border: `1px solid ${beatIt ? "rgba(39,192,96,0.4)" : "rgba(255,95,87,0.35)"}`,
+                            background: beatIt ? "rgba(39,192,96,0.08)" : "rgba(255,95,87,0.07)",
+                            fontSize: "12px",
+                            color: beatIt ? "#27c060" : "#ff8b84",
+                            textAlign: "center",
+                          }}>
+                            {beatIt
+                              ? `you beat ${HIGH_SCORE_HOLDER} — ${HIGH_SCORE} wpm 🏆`
+                              : `you didn't beat ${HIGH_SCORE_HOLDER} — ${HIGH_SCORE} wpm`}
+                          </div>
+
+                          {beatIt && (
+                            <div style={{
+                              marginTop: "8px", fontSize: "11px",
+                              color: "rgba(255,255,255,0.5)", textAlign: "center",
+                            }}>
+                              congrats — new record holder. those are some fast hands.
+                            </div>
+                          )}
+
+                          <div style={{ display: "flex", gap: "8px", marginTop: "14px" }}>
+                            <button
+                              onClick={openTest}
+                              style={{
+                                background: "rgba(255,255,255,0.08)",
+                                border: "1px solid rgba(255,255,255,0.12)",
+                                color: "#fff", borderRadius: "6px",
+                                padding: "6px 14px", fontSize: "11px", cursor: "pointer",
+                                fontFamily: "'JetBrains Mono',monospace",
+                              }}
+                            >
+                              retry
+                            </button>
+                            <button
+                              onClick={closeTest}
+                              style={{
+                                background: "transparent",
+                                border: "1px solid rgba(255,255,255,0.12)",
+                                color: "rgba(255,255,255,0.6)", borderRadius: "6px",
+                                padding: "6px 14px", fontSize: "11px", cursor: "pointer",
+                                fontFamily: "'JetBrains Mono',monospace",
+                              }}
+                            >
+                              back to terminal
+                            </button>
+                          </div>
+
+                          <div style={{
+                            fontSize: "10px", color: "rgba(255,255,255,0.25)", marginTop: "10px",
+                          }}>
+                            tab to restart · esc to quit
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               {/* end terminal */}
