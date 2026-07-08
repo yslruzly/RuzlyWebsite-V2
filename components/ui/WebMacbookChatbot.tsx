@@ -11,7 +11,7 @@ interface ChatLine {
 
 const BOT_REPLIES: Record<string, string> = {
   default: "Hey I'm Ruzly's assistant. Currently I'm still in development, so I might not understand everything. Try asking about his skills, projects, or experience!",
-  help: "Available commands: skills · keyboard · projects · experience · contact · hire · about · education · age · hobbies · work · where",
+  help: "Available commands: skills · clear · keyboard · projects · experience · contact · hire · about · education · age · hobbies · work · where",
   hi: "Hey! 👋 Ask me anything about Ruzly.",
   hello: "Hello! What would you like to know about Ruzly?",
   skills: "Ruzly works with React, TypeScript, Next.js, Node.js, Python, PostgreSQL, Docker, and more.",
@@ -41,7 +41,7 @@ function getBotReply(input: string): string {
 
 /* ══════════ TYPING TEST CONFIG ══════════ */
 const TEST_DURATION = 15;          // seconds
-const HIGH_SCORE = 131;            // wpm
+const HIGH_SCORE = 144;            // wpm
 const HIGH_SCORE_HOLDER = "ruzly";
 
 const WORD_POOL = [
@@ -291,7 +291,7 @@ const MacbookChatbot: FC = () => {
     }
 
     if (text.toLowerCase() === "help") {
-      addLine("output", "Commands: skills · projects · experience · contact · hire · about · clear");
+      addLine("output", BOT_REPLIES.help);
       return;
     }
     if (text.toLowerCase() === "clear") {
