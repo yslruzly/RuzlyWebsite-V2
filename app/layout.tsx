@@ -10,7 +10,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  icons: { icon: "/images/favicon.svg" },
+  icons: { icon: "/favicon.svg" },
   title: "Ruzly Macatula — AI Engineer & Full-Stack Developer",
   description:
     "Portfolio of Ruzly Macatula (John), aspiring software engineer and 3rd-year BS Computer Science student at UE Manila building web and mobile applications.",
