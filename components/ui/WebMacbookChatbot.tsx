@@ -41,7 +41,7 @@ function getBotReply(input: string): string {
 
 const MacbookChatbot: FC = () => {
   const [lines, setLines] = useState<ChatLine[]>([
-    { type: "system", text: "Last login: Fri Jun 6 09:00:00 on ttys001", id: 0 },
+    { type: "system", text: "Last login: Fri Jul 1 09:00:00 on ttys001", id: 0 },
     { type: "system", text: "ruzly-assistant 1.0.0 — portfolio terminal", id: 1 },
     { type: "system", text: "Type 'help' for available commands.", id: 2 },
     { type: "output", text: "", id: 3 },
@@ -216,7 +216,7 @@ const MacbookChatbot: FC = () => {
                 paddingLeft: "12px", zIndex: 2,
               }}>
                 <span style={{ fontSize: "13px", color: "#fff", lineHeight: 1 }}>⌘</span>
-                {["Finder","File","Edit","View","Go","Window","Help"].map((m, i) => (
+                {["Finder", "File", "Edit", "View", "Go", "Window", "Help"].map((m, i) => (
                   <span key={m} style={{
                     fontSize: "11px",
                     color: i === 0 ? "#fff" : "rgba(255,255,255,0.78)",
@@ -369,8 +369,8 @@ const MacbookChatbot: FC = () => {
                         fontFamily: "'JetBrains Mono',monospace",
                         color: line.type === "system" ? "rgba(255,255,255,0.45)"
                           : line.type === "input" ? "#ffffff"
-                          : line.type === "error" ? "#ff6b6b"
-                          : "#ffffff",
+                            : line.type === "error" ? "#ff6b6b"
+                              : "#ffffff",
                       }}>
                         {line.type === "input" && (
                           <span style={{ color: "#27c060", fontWeight: 700 }}>ruzly@portfolio ~ % </span>
@@ -384,11 +384,11 @@ const MacbookChatbot: FC = () => {
                     {typing && (
                       <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                         <span style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono',monospace", fontSize: "12px" }}>→  </span>
-                        {[0,1,2].map(i => (
+                        {[0, 1, 2].map(i => (
                           <div key={i} style={{
                             width: "5px", height: "5px", borderRadius: "50%",
                             background: "#ffffff",
-                            animation: `mbp-bounce 1.3s ease-in-out ${i*0.2}s infinite`,
+                            animation: `mbp-bounce 1.3s ease-in-out ${i * 0.2}s infinite`,
                           }} />
                         ))}
                       </div>
@@ -464,7 +464,7 @@ const MacbookChatbot: FC = () => {
 
         {/* FEET */}
         <div style={{ width: "calc(100% - 50px)", display: "flex", justifyContent: "space-between" }}>
-          {[0,1].map(i => (
+          {[0, 1].map(i => (
             <div key={i} style={{
               width: "96px", height: "6px",
               background: "linear-gradient(180deg,#262628,#1c1c1e)",

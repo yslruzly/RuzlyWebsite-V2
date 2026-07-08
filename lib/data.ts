@@ -145,15 +145,15 @@ export const projects: Project[] = [
 
 export const EXPERIENCES: ExpItem[] = [
   {
-    year: "2026 — Present",
+    year: "May — July 2026",
     role: "On The Job Training",
     company: "Onecore Consultancy / NextCore Technology · Onsite",
     desc: "Developing practical skills in a real-world work environment.",
   },
   {
     year: "2023 — Present",
-    role: "3rd Year BS ComSci",
-    company: "University Of The East - Manila · Hybrid",
+    role: "4th Year BS ComSci",
+    company: "University Of The East - Manila · Onsite",
     desc: "Aspiring Software Engineer Student.",
   },
   {
