@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { JetBrains_Mono } from "next/font/google";
+import Preloader from "@/components/ui/Preloader";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -46,6 +47,7 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('theme')||'dark';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var light=t==='light'||(t==='system'&&!d);document.documentElement.classList.toggle('light',light);}catch(e){}})();`,
           }}
         />
+        <Preloader />
         {children}
       </body>
     </html>
