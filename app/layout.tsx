@@ -10,14 +10,22 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  icons: { icon: "/favicon.svg" },
-  title: "Ruzly Macatula — AI Engineer & Full-Stack Developer",
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+  title: "Ruzly Macatula — Aspiring Software Engineer",
   description:
-    "Portfolio of Ruzly Macatula (John), aspiring software engineer and 3rd-year BS Computer Science student at UE Manila building web and mobile applications.",
+    "Portfolio of Ruzly Macatula (John), aspiring software engineer - BS Computer Science student.",
   openGraph: {
-    title: "Ruzly Macatula — AI Engineer & Full-Stack Developer",
+    title: "Ruzly Macatula — Aspiring Software Engineer",
     description:
-      "AI-powered products built with Next.js, TypeScript, RAG pipelines, and agentic workflows. Based in Manila, Philippines.",
+      "Aspiring software engineer with a focus on building web and mobile applications. Based in Manila, Philippines.",
     type: "website",
   },
 };
