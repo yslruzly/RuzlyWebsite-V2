@@ -95,6 +95,7 @@ const MacbookChatbot: FC = () => {
     { type: "system", text: "ruzly-assistant 1.0.0 — portfolio terminal", id: 1 },
     { type: "system", text: "Type 'help' for available commands.", id: 2 },
     { type: "output", text: "", id: 3 },
+    { type: "system", text: "Type 'keyboard' to start the typing test.", id: 4 },
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
