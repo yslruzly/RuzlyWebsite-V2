@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 // Full-screen "RM" monogram shown on first paint, then wiped away to reveal
 // the site. Rendered on the server too, so the page never flashes before the
 // overlay mounts. Visitors who ask for reduced motion get a plain quick fade.
-const HOLD_MS = 1700;
+const HOLD_MS = 2300;
 
 export default function Preloader() {
   const [done, setDone] = useState(false);
