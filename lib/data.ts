@@ -157,7 +157,7 @@ export const EXPERIENCES: ExpItem[] = [
     year: "2023 — Present",
     role: "4th Year BS ComSci",
     company: "University Of The East - Manila · Onsite",
-    desc: "Aspiring Software Engineer Student.",
+    desc: "Currently pursuing a degree in Computer Science.",
   },
   {
     year: "2022",
