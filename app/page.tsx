@@ -9,6 +9,7 @@ import Contact from "@/components/sections/Contact";
 import DotField from "@/components/ui/DotField";
 import ChatbotWidget from "@/components/widgets/ChatbotWidget";
 import RadioWidget from "@/components/widgets/RadioWidget";
+import MobileNotice from "@/components/widgets/MobileNotice";
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
       </div>
       <ChatbotWidget />
       <RadioWidget />
+      <MobileNotice />
     </main>
   );
 }
