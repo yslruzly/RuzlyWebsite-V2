@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { Copy, Mail } from "lucide-react";
 import HeroTerminal from "@/components/ui/HeroTerminal";
-import { MagneticButton, SplitWords, TypewriterRotate } from "@/components/ui/motion-primitives";
+import { MagneticButton, RepelText, TypewriterRotate } from "@/components/ui/motion-primitives";
 
 export default function Hero() {
   const reduce = useReducedMotion();
@@ -16,8 +16,8 @@ export default function Hero() {
       <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
         <div>
           <h1 className="text-[clamp(2.6rem,7vw,5rem)] leading-[1.02] font-semibold tracking-tight">
-            <SplitWords text="Ruzly" delay={0.2} />{" "}
-            <SplitWords text="Macatula" delay={0.35} className="text-mist" />
+            <RepelText text="Ruzly" delay={0.2} />{" "}
+            <RepelText text="Macatula" delay={0.35} className="text-mist" />
           </h1>
 
           <motion.p

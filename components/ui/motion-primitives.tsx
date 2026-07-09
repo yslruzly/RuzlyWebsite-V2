@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /** Scroll-triggered reveal: fades and slides content up once it enters view. */
 export function Reveal({
@@ -226,6 +226,134 @@ export function TypewriterRotate({
         {prefix}
         <span className={phraseClassName}>{phrase.slice(0, count)}</span>
         <span className="animate-caret text-paper font-bold select-none">|</span>
+      </span>
+    </span>
+  );
+}
+
+/**
+ * Hero headline word that slides up on load, then scatters letter by letter
+ * away from the cursor. Letter rest positions are measured in page
+ * coordinates once the entrance finishes, so the push is computed against
+ * where a letter *belongs*, not where the spring has currently flung it.
+ */
+export function RepelText({
+  text,
+  className = "",
+  delay = 0,
+  radius = 120,
+  maxPush = 28,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+  /** Cursor distance, in px, at which a letter starts to move. */
+  radius?: number;
+  /** How far a letter travels when the cursor is right on top of it. */
+  maxPush?: number;
+}) {
+  const reduce = useReducedMotion();
+  const letters = Array.from(text);
+
+  const refs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [centers, setCenters] = useState<{ x: number; y: number }[]>([]);
+  const [mouse, setMouse] = useState<{ x: number; y: number } | null>(null);
+  // The entrance clips letters to their line box; only unclip once it's done,
+  // otherwise a letter pushed upward gets sliced off.
+  const [entered, setEntered] = useState(false);
+
+  const measure = useCallback(() => {
+    setCenters(
+      refs.current.map((el) => {
+        if (!el) return { x: -9999, y: -9999 };
+        const r = el.getBoundingClientRect();
+        return {
+          x: r.left + r.width / 2 + window.scrollX,
+          y: r.top + r.height / 2 + window.scrollY,
+        };
+      })
+    );
+  }, []);
+
+  useEffect(() => {
+    if (reduce) return;
+    const t = setTimeout(() => setEntered(true), (delay + 0.9) * 1000);
+    return () => clearTimeout(t);
+  }, [reduce, delay]);
+
+  useEffect(() => {
+    if (reduce || !entered) return;
+    measure();
+    // Webfonts can land after first paint and reflow every letter.
+    document.fonts?.ready.then(measure).catch(() => {});
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [reduce, entered, measure]);
+
+  useEffect(() => {
+    if (reduce || !entered) return;
+    let frame = 0;
+    const onMove = (e: MouseEvent) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        setMouse({ x: e.pageX, y: e.pageY });
+      });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [reduce, entered]);
+
+  const offsetFor = (i: number) => {
+    const c = centers[i];
+    if (!mouse || !c) return { x: 0, y: 0 };
+    const dx = c.x - mouse.x;
+    const dy = c.y - mouse.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist > radius) return { x: 0, y: 0 };
+    // Linear falloff, strongest when the cursor sits on the letter's center.
+    const force = (1 - dist / radius) * maxPush;
+    // Guard the degenerate case where the cursor is exactly on the center.
+    if (dist < 0.001) return { x: 0, y: -force };
+    return { x: (dx / dist) * force, y: (dy / dist) * force };
+  };
+
+  return (
+    <span className={className} aria-label={text} role="text">
+      <span
+        className={`inline-block align-bottom ${
+          entered ? "overflow-visible" : "overflow-hidden"
+        }`}
+      >
+        <motion.span
+          className="inline-block"
+          initial={reduce ? false : { y: "110%" }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+          aria-hidden="true"
+        >
+          {letters.map((ch, i) => (
+            <motion.span
+              key={i}
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              className="inline-block"
+              animate={reduce ? undefined : offsetFor(i)}
+              transition={{
+                type: "spring",
+                stiffness: 190,
+                damping: 13,
+                mass: 0.35,
+              }}
+            >
+              {ch}
+            </motion.span>
+          ))}
+        </motion.span>
       </span>
     </span>
   );
