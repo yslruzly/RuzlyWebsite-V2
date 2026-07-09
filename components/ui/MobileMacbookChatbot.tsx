@@ -7,7 +7,7 @@ interface ChatMsg { from: "user" | "bot"; text: string; }
 
 const BOT_REPLIES: Record<string, string> = {
   default: "Hey I'm Ruzly's assistant. Currently I'm still in development, so I might not understand everything.",
-  help: "Available commands: skills · keyboard · projects · experience · contact · hire · about · education · age · hobbies · work · where · age",
+  help: "Available commands: skills · projects · experience · contact · hire · about · education · age · hobbies · work · where · age",
   hi: "Hey! 👋 Ask me anything about Ruzly.",
   hello: "Hello! What would you like to know about Ruzly?",
   skills: "Ruzly works with React, TypeScript, Next.js, Node.js, Python, PostgreSQL, Docker, and more.",
@@ -36,7 +36,7 @@ function getBotReply(input: string): string {
 
 const MacbookChatbot: FC = () => {
   const [messages, setMessages] = useState<ChatMsg[]>([
-    { from: "bot", text: "Hi! I'm Ruzly's assistant. This is a Mobile Macbook Chatbot. Type 'help' for available commands!." },
+    { from: "bot", text: "Hi! I'm Ruzly's assistant. This is a Mobile Version of Macbook Chatbot. Type 'help' for available commands!." },
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
