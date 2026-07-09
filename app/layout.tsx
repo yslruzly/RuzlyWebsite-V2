@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
-  title: "Ruzly Macatula — Aspiring Software Engineer",
+  title: "Ruzly Macatula — Aspiring AI & Software Engineer",
   description:
-    "Portfolio of Ruzly Macatula (John), aspiring software engineer - BS Computer Science student.",
+    "Hi, I'm Ruzly — an aspiring AI & software engineer and CS student in Manila, turning ideas into RAG-powered, full-stack web and mobile apps.",
   openGraph: {
-    title: "Ruzly Macatula — Aspiring Software Engineer",
+    title: "Ruzly Macatula — Aspiring AI & Software Engineer",
     description:
-      "Aspiring software engineer with a focus on building web and mobile applications. Based in Manila, Philippines.",
+      "Hi, I'm Ruzly — an aspiring AI & Software Engineer and CS student in Manila, turning ideas into RAG-powered, full-stack web and mobile apps.",
     type: "website",
   },
 };
