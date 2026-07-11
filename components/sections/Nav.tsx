@@ -81,10 +81,10 @@ export default function Nav() {
       }`}
     >
       <nav
-        className={`mx-auto flex items-center justify-between backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           detached
-            ? "h-13 max-w-4xl rounded-full border border-paper/25 bg-ink/80 px-5 shadow-[0_0_18px_rgba(255,255,255,0.12),inset_0_0_10px_rgba(255,255,255,0.04),0_10px_40px_rgba(0,0,0,0.5)] sm:px-7"
-            : "h-16 max-w-6xl bg-ink/70 px-5 sm:px-8"
+            ? "h-13 max-w-4xl rounded-full border border-paper/25 bg-ink/80 px-5 shadow-[0_0_18px_rgba(255,255,255,0.12),inset_0_0_10px_rgba(255,255,255,0.04),0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-7"
+            : "h-16 max-w-6xl bg-transparent px-5 sm:px-8"
         }`}
         aria-label="Main"
       >
