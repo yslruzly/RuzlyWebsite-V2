@@ -7,6 +7,10 @@ import HeroTerminal from "@/components/ui/HeroTerminal";
 import ColorBends from "@/components/ui/ColorBends";
 import { MagneticButton, RepelText, TypewriterRotate } from "@/components/ui/motion-primitives";
 
+// the color bends palettes, one per theme. change these to retint the hero
+const BENDS_DARK = ["#0a4531", "#0a4531", "#0a4531"];
+const BENDS_LIGHT = ["#343738", "#343738", "#343738"];
+
 // The first thing you see: my name (the letters run from your cursor), the
 // "I build" typewriter line, the intro paragraph, and the terminal with my
 // photo on the right.
@@ -24,6 +28,20 @@ export default function Hero() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
+  // watch the `light` class on <html> (the theme toggle flips it) so the
+  // bends can swap palettes when the theme changes
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    const el = document.documentElement;
+    const update = () => setIsLight(el.classList.contains("light"));
+    update();
+    const obs = new MutationObserver(update);
+    obs.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+
+  const bends = isLight ? BENDS_LIGHT : BENDS_DARK;
+
   return (
     <section
       id="top"
@@ -34,11 +52,7 @@ export default function Hero() {
           bottom so it doesn't hard-cut at the marquee */}
       <div className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 opacity-60 [mask-image:linear-gradient(to_bottom,black_78%,transparent)]">
         <ColorBends
-          colors={
-            isSmall
-              ? ["#0a4531", "#0a4531"]
-              : ["#0a4531", "#0a4531", "#0a4531"]
-          }
+          colors={isSmall ? bends.slice(0, 2) : bends}
           scale={isSmall ? 1.8 : 1}
           speed={0.15}
           noise={0.08}
