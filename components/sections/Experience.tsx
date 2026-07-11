@@ -7,7 +7,7 @@ import GitHubHeatmap from "@/components/ui/GitHubHeatmap";
 
 /**
  * Pinned scroll section: the content sticks in the viewport while the
- * visitor scrolls, the timeline fills from 2026 down to 2022, then the
+ * visitor scrolls, the timeline fills upward from 2022 to 2026, then the
  * page releases and continues to Contact.
  */
 export default function Experience() {
@@ -92,21 +92,22 @@ export default function Experience() {
             <div ref={timelineRef} className="relative pl-8 sm:pl-10">
               {/* track */}
               <div className="absolute top-0 bottom-0 left-[9px] w-px bg-line sm:left-[11px]" />
-              {/* scroll-driven fill */}
+              {/* scroll-driven fill, rising from the bottom */}
               <div
-                className="absolute top-0 left-[9px] w-px bg-paper sm:left-[11px]"
+                className="absolute bottom-0 left-[9px] w-px bg-paper sm:left-[11px]"
                 style={{ height: `${progress * 100}%` }}
               />
 
               <div className="space-y-8 sm:space-y-12">
                 {EXPERIENCES.map((item, i) => {
-                  // light the item the moment the fill line reaches its dot;
-                  // fall back to an even estimate until geometry is measured
+                  // light the item the moment the rising fill reaches its dot
+                  // (bottom items first); fall back to an even estimate until
+                  // geometry is measured
                   const dotCenter = metrics.dots[i];
                   const lit =
                     metrics.height > 0 && dotCenter !== undefined
-                      ? progress * metrics.height >= dotCenter
-                      : progress >= (i + 0.5) / n;
+                      ? progress * metrics.height >= metrics.height - dotCenter
+                      : progress >= (n - i - 0.5) / n;
                   return (
                     <div
                       key={item.role}
