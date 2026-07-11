@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { X, Monitor } from "lucide-react";
 
-// One-time notice shown to mobile visitors letting them know the desktop
-// build is the richer experience. Dismissed state persists for the session
-// so it doesn't nag on every scroll or route change.
+// Small popup for phone visitors saying the site is better on desktop.
+// Once you close it, it stays closed for the rest of the session so it
+// doesn't keep coming back.
 const MobileNotice: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -13,7 +13,7 @@ const MobileNotice: React.FC = () => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const dismissed = sessionStorage.getItem("mobileNoticeDismissed") === "1";
     if (isMobile && !dismissed) {
-      // Small delay so it slides in after the page settles.
+      // wait a bit so it slides in after the page settles
       const t = setTimeout(() => setVisible(true), 900);
       return () => clearTimeout(t);
     }

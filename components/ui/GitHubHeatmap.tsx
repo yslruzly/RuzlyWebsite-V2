@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 
 type Day = { date: string; count: number; level: number };
 
-/** Number of most-recent weeks to show in the compact "mini" heatmap. */
+// how many recent weeks of activity to show
 const WEEKS_TO_SHOW = 20;
 
-/** Group a flat, chronological list of days into GitHub-style week columns
- *  (each column is Sun..Sat, with leading/trailing gaps as null). */
+// groups the flat list of days into week columns like github does
+// (each column is Sun to Sat, nulls fill the gaps at the start and end)
 function buildWeeks(days: Day[]): (Day | null)[][] {
   const weeks: (Day | null)[][] = [];
   let current: (Day | null)[] = new Array(7).fill(null);
@@ -24,11 +24,10 @@ function buildWeeks(days: Day[]): (Day | null)[][] {
   return weeks;
 }
 
-/**
- * Compact GitHub contribution heatmap. Pulls the last year of public
- * contributions from a token-free API and renders the most recent weeks in a
- * green scale that matches the site's accent (theme-aware via CSS).
- */
+// My github contribution graph, the green squares in the Experience section.
+// Pulls the last year of activity from a free public API (no token needed)
+// and draws the recent weeks. If the API ever dies it just falls back to a
+// plain link to my github profile.
 export default function GitHubHeatmap({ username }: { username: string }) {
   const [days, setDays] = useState<Day[] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -51,7 +50,7 @@ export default function GitHubHeatmap({ username }: { username: string }) {
     };
   }, [username]);
 
-  // Skeleton while loading: an empty grid so the layout doesn't jump.
+  // show an empty grid while loading so nothing jumps when the data lands
   const skeleton: (Day | null)[][] = Array.from({ length: WEEKS_TO_SHOW }, () =>
     new Array(7).fill(null)
   );

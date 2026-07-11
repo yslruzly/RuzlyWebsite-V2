@@ -3,7 +3,8 @@
 import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 
-/** Terminal window framing John's photo — hero visual. */
+// The terminal-style frame around my photo in the hero.
+// The bottom bar of the window holds the theme switcher.
 export default function HeroTerminal({ className = "" }: { className?: string }) {
   return (
     <div

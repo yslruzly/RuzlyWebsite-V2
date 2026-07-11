@@ -41,7 +41,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body>
-        {/* Apply the saved theme before paint to avoid a light/dark flash. */}
+        {/* runs before anything paints so the saved theme applies right away, no light/dark flash */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme')||'dark';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var light=t==='light'||(t==='system'&&!d);document.documentElement.classList.toggle('light',light);}catch(e){}})();`,

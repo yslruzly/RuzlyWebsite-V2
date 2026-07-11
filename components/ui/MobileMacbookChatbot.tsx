@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
+// The smaller macbook for phones. Simple chat bubbles instead of the full
+// draggable terminal, but the same canned answers about me.
 interface ChatMsg { from: "user" | "bot"; text: string; }
 
 const BOT_REPLIES: Record<string, string> = {

@@ -7,6 +7,8 @@ import { Github, Globe, Folders, X } from "lucide-react";
 import { projects, type Project } from "@/lib/data";
 import { Reveal } from "@/components/ui/motion-primitives";
 
+// One project card. The glow follows your cursor around the card, and
+// clicking anywhere on it opens the details modal.
 function SpotlightCard({
   project,
   onOpen,
@@ -116,6 +118,7 @@ function SpotlightCard({
   );
 }
 
+// The popup with the full project details, opens when you click a card.
 function ProjectModal({
   project,
   onClose,
@@ -126,7 +129,8 @@ function ProjectModal({
   const closeRef = useRef<HTMLButtonElement>(null);
   const { Icon } = project;
 
-  // Lock scroll, close on Escape, and focus the close button on open.
+  // while the modal is open: the page can't scroll, Esc closes it, and
+  // focus jumps to the close button
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();

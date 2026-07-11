@@ -5,11 +5,9 @@ import { Moon, Sun, Monitor } from "lucide-react";
 
 type Theme = "dark" | "light" | "system";
 
-/**
- * Resolve a theme choice to a concrete light/dark state and apply it by
- * toggling the `light` class on <html>. Dark is the absence of that class,
- * which matches what AsciiGlobe / DotField already look for.
- */
+// Turns the picked theme into an actual light or dark page by toggling the
+// `light` class on <html>. Dark is just "no class", which is also what the
+// globe and the dot background check for.
 function applyTheme(theme: Theme) {
   const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const isLight = theme === "light" || (theme === "system" && !systemDark);
@@ -26,8 +24,9 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
-  // Read the saved choice on mount (the inline script in layout has already
-  // applied the correct class before paint, so this just syncs the UI state).
+  // read the saved choice when the buttons mount. the little script in
+  // layout.tsx already applied the right class before paint, this just
+  // makes the buttons show the right one as active
   useEffect(() => {
     const stored = localStorage.getItem("theme") as Theme | null;
     if (stored === "light" || stored === "dark" || stored === "system") {
@@ -36,8 +35,8 @@ export default function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  // Apply + persist whenever the choice changes; when on "system", follow
-  // live OS changes too.
+  // apply and save whenever the choice changes. on "system" we also listen
+  // for the OS switching themes so the site follows along live
   useEffect(() => {
     if (!mounted) return;
     applyTheme(theme);

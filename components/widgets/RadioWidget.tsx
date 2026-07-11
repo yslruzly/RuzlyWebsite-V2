@@ -5,6 +5,10 @@ import { Radio, SkipBack, SkipForward, Play, Pause, Volume2, X } from "lucide-re
 
 interface RadioStation { name: string; url_resolved: string; }
 
+// The floating radio player, second button from the bottom on the right.
+// Streams real live stations from the free radio-browser API, with a music
+// tab and a sports tab. The little green dot on the button means something
+// is playing.
 const RadioWidget: React.FC = () => {
   const [genre, setGenre] = useState<"rock" | "sports">("rock");
   const [stations, setStations] = useState<RadioStation[]>([]);

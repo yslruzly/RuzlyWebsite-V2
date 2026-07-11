@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { X, Bot } from "lucide-react";
 
+// The floating chat button at the bottom right. The panel it opens is just
+// a "coming soon" placeholder for now, the real assistant lives in the
+// macbook terminal in the About section.
 const ChatbotWidget: React.FC = () => {
   const [chatOpen, setChatOpen] = useState<boolean>(false);
 

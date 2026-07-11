@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
-// Full-screen "RM" monogram shown on first paint, then wiped away to reveal
-// the site. Rendered on the server too, so the page never flashes before the
-// overlay mounts. Visitors who ask for reduced motion get a plain quick fade.
+// The intro splash. "RM" comes together in the middle, holds for a moment,
+// then the whole panel slides up and reveals the site. It renders on the
+// server too so the real page never flashes before the logo shows up.
+// Anyone with reduced motion turned on gets a quick fade instead.
+
+// how long the logo stays on screen before the reveal (ms)
 const HOLD_MS = 2300;
 
 export default function Preloader() {
@@ -22,7 +25,7 @@ export default function Preloader() {
     return () => clearTimeout(t);
   }, []);
 
-  // Freeze the page underneath so nothing scrolls behind the overlay.
+  // lock scrolling while the splash is up so the page can't move behind it
   useEffect(() => {
     if (done) return;
     const prev = document.body.style.overflow;

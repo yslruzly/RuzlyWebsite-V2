@@ -6,10 +6,8 @@ import { SKILLS } from "@/lib/data";
 import { TECH_ICONS } from "@/lib/tech-icons";
 import { Reveal } from "@/components/ui/motion-primitives";
 
-/**
- * Skills as full-width editorial rows. Hovering a row inverts it
- * (white on black becomes black on white) — pure B&W interaction.
- */
+// The skills list. Each skill is a full-width row, and hovering one inverts
+// its colors so it reads white-on-black flipped to black-on-white.
 export default function Skills() {
   const [active, setActive] = useState<number | null>(null);
 

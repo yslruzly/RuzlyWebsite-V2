@@ -5,6 +5,9 @@ import { Copy, Mail } from "lucide-react";
 import HeroTerminal from "@/components/ui/HeroTerminal";
 import { MagneticButton, RepelText, TypewriterRotate } from "@/components/ui/motion-primitives";
 
+// The first thing you see: my name (the letters run from your cursor), the
+// "I build" typewriter line, the intro paragraph, and the terminal with my
+// photo on the right.
 export default function Hero() {
   const reduce = useReducedMotion();
 

@@ -58,7 +58,7 @@
   --font-jet: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-/* Floating widget panels (ChatbotWidget, RadioWidget) */
+/* shared animations for the floating widgets (chatbot, radio, mobile notice) */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -86,14 +86,14 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--color-ink);
-  /* clip (not hidden) so the root never scrolls sideways from the marquee /
-     wide children, while keeping position: sticky working in Experience */
+  /* clip instead of hidden: stops the marquee from causing sideways scroll
+     but keeps position sticky working in the Experience section */
   overflow-x: clip;
 }
 
-/* Light theme: invert the palette when <html> carries the `light` class
-   (set by ThemeToggle / the no-flash script in layout). All Tailwind color
-   utilities read these vars, so overriding them here recolors the whole UI. */
+/* Light mode. The theme toggle puts a `light` class on <html> and this block
+   swaps the palette. Every color on the site reads from these variables, so
+   overriding them here recolors the whole thing at once. */
 html.light {
   --color-ink: #ffffff;
   --color-paper: #0a0a0b;
@@ -114,7 +114,7 @@ body {
     color 0.3s ease;
 }
 
-/* Hero portrait is grayscale in dark mode; show its real colors in light. */
+/* my photo is grayscale in dark mode, full color in light mode */
 .hero-photo {
   transition: filter 0.5s ease;
 }
@@ -139,9 +139,9 @@ html.light .hero-terminal-bar {
   background-color: #ececef;
 }
 
-/* Section eyebrow titles (ABOUT, SKILLS, SELECTED WORK, EXPERIENCE, CONTACT):
-   green accent in dark mode only; normal color in light mode.
-   Change #4ade80 below to adjust the green. */
+/* the small green section labels (ABOUT, SKILLS, SELECTED WORK, and so on).
+   green in dark mode only, normal text color in light mode.
+   change the color below if I ever want a different accent */
 .section-eyebrow {
   color: #34d399;
 }
@@ -150,7 +150,7 @@ html.light .section-eyebrow {
   color: var(--color-paper);
 }
 
-/* GitHub activity heatmap: green intensity scale, theme-aware. */
+/* github heatmap squares, darker to brighter green. light mode gets its own set below */
 .gh-cell {
   width: 15px;
   height: 15px;
@@ -193,7 +193,7 @@ html.light .gh-lvl-4 {
   color: var(--color-ink);
 }
 
-/* Thin monochrome scrollbar */
+/* skinny custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -231,7 +231,7 @@ html.light .gh-lvl-4 {
   }
 }
 
-/* Animated "beam" that travels around a project card's border on hover */
+/* the light beam that runs around a project card's border when you hover it */
 @property --beam-angle {
   syntax: "<angle>";
   inherits: false;
@@ -251,7 +251,7 @@ html.light .gh-lvl-4 {
       var(--color-mist) 320deg,
       var(--color-paper) 350deg,
       transparent 360deg);
-  /* show only the border ring by masking out the inner content box */
+  /* mask trick: hide the middle so only the border ring shows */
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);

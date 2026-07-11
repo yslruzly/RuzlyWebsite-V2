@@ -5,18 +5,16 @@ import { Coffee } from "lucide-react";
 import { EXPERIENCES } from "@/lib/data";
 import GitHubHeatmap from "@/components/ui/GitHubHeatmap";
 
-/**
- * Pinned scroll section: the content sticks in the viewport while the
- * visitor scrolls, the timeline fills upward from 2022 to 2026, then the
- * page releases and continues to Contact.
- */
+// The "Where I've been" section. The panel pins in place while you scroll
+// and the timeline line fills up from 2022 at the bottom to 2026 at the top.
+// Once it's full the page lets go and you continue down to Contact.
 export default function Experience() {
   const outerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [progress, setProgress] = useState(0);
-  // measured geometry so a box lights exactly when the fill line reaches it
+  // real pixel positions of each dot, so an item lights up exactly when the line touches it
   const [metrics, setMetrics] = useState<{ height: number; dots: number[] }>({
     height: 0,
     dots: [],
@@ -28,7 +26,7 @@ export default function Experience() {
       if (!el) return;
       setMetrics({
         height: el.offsetHeight,
-        // dot center = item's top within the track + caret offset (top-1.5 + half of 11px)
+        // dot center is the item's top plus the dot's own offset (top-1.5 plus half of the 11px square)
         dots: itemRefs.current.map((d) => (d ? d.offsetTop + 11.5 : 0)),
       });
     };
@@ -49,8 +47,9 @@ export default function Experience() {
           return;
         }
         const rect = outer.getBoundingClientRect();
-        // Use the pinned panel's real height (matches the sticky travel on
-        // mobile, where window.innerHeight shifts as the address bar hides).
+        // use the pinned panel's actual height here. on mobile the browser
+        // address bar hides while scrolling and window.innerHeight jumps,
+        // which made the progress skip around
         const pinnedH = stickyRef.current?.offsetHeight ?? window.innerHeight;
         const scrollable = rect.height - pinnedH;
         const p = scrollable > 0 ? Math.min(Math.max(-rect.top / scrollable, 0), 1) : 1;
@@ -71,7 +70,7 @@ export default function Experience() {
 
   return (
     <section id="experience" className="border-t border-line bg-surface/40">
-      {/* Tall outer wrapper creates the pinned scroll distance */}
+      {/* this tall wrapper is what gives the section its scroll distance while the panel stays pinned */}
       <div ref={outerRef} className="relative h-[260svh]">
         <div ref={stickyRef} className="sticky top-0 flex h-svh items-center overflow-hidden">
           <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
@@ -92,7 +91,7 @@ export default function Experience() {
             <div ref={timelineRef} className="relative pl-8 sm:pl-10">
               {/* track */}
               <div className="absolute top-0 bottom-0 left-[9px] w-px bg-line sm:left-[11px]" />
-              {/* scroll-driven fill, rising from the bottom */}
+              {/* the white line that fills up as you scroll */}
               <div
                 className="absolute bottom-0 left-[9px] w-px bg-paper sm:left-[11px]"
                 style={{ height: `${progress * 100}%` }}
@@ -100,9 +99,9 @@ export default function Experience() {
 
               <div className="space-y-8 sm:space-y-12">
                 {EXPERIENCES.map((item, i) => {
-                  // light the item the moment the rising fill reaches its dot
-                  // (bottom items first); fall back to an even estimate until
-                  // geometry is measured
+                  // light this item up when the rising line reaches its dot,
+                  // bottom ones first. before anything is measured, just
+                  // estimate evenly
                   const dotCenter = metrics.dots[i];
                   const lit =
                     metrics.height > 0 && dotCenter !== undefined
@@ -141,7 +140,7 @@ export default function Experience() {
               </div>
             </div>
 
-              {/* right column: mini GitHub contribution heatmap (desktop) */}
+              {/* github heatmap on the right, desktop only */}
               <div className="hidden lg:flex lg:justify-center">
                 <GitHubHeatmap username="yslruzly" />
               </div>

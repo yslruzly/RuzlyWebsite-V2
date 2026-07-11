@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
+// The big macbook in the About section (desktop only). A fake macOS desktop
+// with a draggable terminal that answers questions about me from the canned
+// replies below. There's also a hidden typing test, type "keyboard" to try it.
 interface ChatLine {
   type: "input" | "output" | "system" | "error";
   text: string;
@@ -150,7 +153,7 @@ const MacbookChatbot: FC = () => {
     return () => clearInterval(t);
   }, []);
 
-  // Auto-scroll (only the terminal's own message box, never the page)
+  // auto scroll the terminal when new lines come in (just the message box, never the page)
   useEffect(() => {
     const box = bottomRef.current?.parentElement;
     if (box) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
@@ -308,7 +311,7 @@ const MacbookChatbot: FC = () => {
     }, 700);
   };
 
-  // Terminal width/height as % of desktop — fills most of the screen
+  // terminal size relative to the fake desktop, fills most of it
   const termW = "calc(100% - 80px)";
   const termH = "calc(100% - 74px)"; // leave room for menubar + padding
 
@@ -378,7 +381,7 @@ const MacbookChatbot: FC = () => {
             overflow: "hidden",
           }}>
 
-            {/* ── NOTCH ROW — menubar lives here, camera in centre ── */}
+            {/* ── NOTCH ROW: menubar lives here, camera in the middle ── */}
             <div style={{
               background: "rgba(14,14,16,0.96)",
               backdropFilter: "blur(20px)",
@@ -406,7 +409,7 @@ const MacbookChatbot: FC = () => {
                 ))}
               </div>
 
-              {/* NOTCH pill — centred absolutely */}
+              {/* the notch pill, centered absolutely */}
               <div style={{
                 position: "absolute", left: "50%", top: 0,
                 transform: "translateX(-50%)",
@@ -670,7 +673,7 @@ const MacbookChatbot: FC = () => {
                             </span>
                           </div>
 
-                          {/* passage — monkeytype style word grid */}
+                          {/* the passage, monkeytype style */}
                           <div style={{
                             height: `${LINE_H * VISIBLE_LINES}px`,
                             flexShrink: 0,

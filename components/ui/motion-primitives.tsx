@@ -3,7 +3,8 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-/** Scroll-triggered reveal: fades and slides content up once it enters view. */
+// Fade-up on scroll. Wrap anything in this and it slides up into view
+// the first time you scroll to it.
 export function Reveal({
   children,
   delay = 0,
@@ -27,7 +28,8 @@ export function Reveal({
   );
 }
 
-/** Button that subtly follows the cursor, magicui-style. */
+// Button that leans toward your cursor a little while you hover it,
+// then springs back to place when you leave.
 export function MagneticButton({
   children,
   href,
@@ -77,12 +79,10 @@ export function MagneticButton({
   );
 }
 
-/**
- * Looping typewriter: types the text letter by letter, pauses, deletes it,
- * and starts over. Accepts styled segments so parts of the sentence can
- * carry different classes. An invisible copy of the full text reserves the
- * final size, so the layout never shifts while typing.
- */
+// Typewriter that loops forever: types the text out, waits, deletes it,
+// starts again. Takes segments so parts of the sentence can have their own
+// styling. There's a hidden copy of the full text underneath keeping the box
+// at full size, so the layout doesn't jump around while it types.
 export function TypewriterLoop({
   segments,
   className = "",
@@ -145,7 +145,7 @@ export function TypewriterLoop({
 
   return (
     <span className={`relative inline-block ${className}`} aria-label={full} role="text">
-      {/* invisible copy reserves the full width/height */}
+      {/* the hidden copy that holds the full size */}
       <span className="invisible" aria-hidden="true">
         {segments.map((s, i) => (
           <span key={i} className={s.className}>
@@ -161,11 +161,9 @@ export function TypewriterLoop({
   );
 }
 
-/**
- * Rotating typewriter: a static prefix followed by phrases that type in
- * letter by letter, hold, backspace out, then advance to the next phrase
- * in the list — looping forever.
- */
+// Same idea but with rotating phrases: a fixed prefix, then each phrase
+// types in, holds for a bit, backspaces out, and the next one starts.
+// This is the "I build → ..." line in the hero.
 export function TypewriterRotate({
   prefix = "",
   phrases,
@@ -231,12 +229,11 @@ export function TypewriterRotate({
   );
 }
 
-/**
- * Hero headline word that slides up on load, then scatters letter by letter
- * away from the cursor. Letter rest positions are measured in page
- * coordinates once the entrance finishes, so the push is computed against
- * where a letter *belongs*, not where the spring has currently flung it.
- */
+// The hero name effect. The word still slides up on load like before, but
+// after that every letter runs away from the cursor and springs back when
+// you leave. I measure where each letter sits once the intro is done and
+// always push from that home spot, not from wherever the letter currently
+// is, otherwise they jitter and never settle.
 export function RepelText({
   text,
   className = "",
@@ -247,9 +244,9 @@ export function RepelText({
   text: string;
   className?: string;
   delay?: number;
-  /** Cursor distance, in px, at which a letter starts to move. */
+  // how close the cursor has to get before a letter reacts (px)
   radius?: number;
-  /** How far a letter travels when the cursor is right on top of it. */
+  // how far a letter moves when the cursor is right on top of it
   maxPush?: number;
 }) {
   const reduce = useReducedMotion();
@@ -258,8 +255,8 @@ export function RepelText({
   const refs = useRef<(HTMLSpanElement | null)[]>([]);
   const [centers, setCenters] = useState<{ x: number; y: number }[]>([]);
   const [mouse, setMouse] = useState<{ x: number; y: number } | null>(null);
-  // The entrance clips letters to their line box; only unclip once it's done,
-  // otherwise a letter pushed upward gets sliced off.
+  // the intro clips the letters so they can slide in from below. once it's
+  // done we unclip, or letters pushed upward would get cut off
   const [entered, setEntered] = useState(false);
 
   const measure = useCallback(() => {
@@ -284,7 +281,7 @@ export function RepelText({
   useEffect(() => {
     if (reduce || !entered) return;
     measure();
-    // Webfonts can land after first paint and reflow every letter.
+    // re-measure when the webfont finishes loading, letters shift when it swaps in
     document.fonts?.ready.then(measure).catch(() => {});
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
@@ -314,9 +311,9 @@ export function RepelText({
     const dy = c.y - mouse.y;
     const dist = Math.hypot(dx, dy);
     if (dist > radius) return { x: 0, y: 0 };
-    // Linear falloff, strongest when the cursor sits on the letter's center.
+    // the closer the cursor, the harder the push
     const force = (1 - dist / radius) * maxPush;
-    // Guard the degenerate case where the cursor is exactly on the center.
+    // cursor exactly on the center: no direction to push, just go straight up
     if (dist < 0.001) return { x: 0, y: -force };
     return { x: (dx / dist) * force, y: (dy / dist) * force };
   };
@@ -359,7 +356,8 @@ export function RepelText({
   );
 }
 
-/** Staggered word-by-word text reveal for the hero headline. */
+// Words slide up one after another. This was the old hero name reveal
+// before RepelText replaced it, keeping it around in case I need it.
 export function SplitWords({
   text,
   className = "",

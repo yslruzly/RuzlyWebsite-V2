@@ -53,11 +53,11 @@ export default function About() {
 
           <Reveal delay={0.15}>
             <div className="w-full">
-              {/* Mobile (< 768px): compact chat-bubble MacBook */}
+              {/* phones get the smaller chat bubble version */}
               <div className="md:hidden">
                 <MobileMacbookChatbot />
               </div>
-              {/* Desktop (≥ 768px): full terminal MacBook */}
+              {/* desktop gets the full macbook terminal */}
               <div className="hidden md:block">
                 <WebMacbookChatbot />
               </div>

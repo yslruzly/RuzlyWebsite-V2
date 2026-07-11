@@ -3,8 +3,8 @@ import AsciiGlobe from "@/components/ui/AsciiGlobe";
 import { links } from "@/lib/data";
 import { MagneticButton, Reveal } from "@/components/ui/motion-primitives";
 
-// Left column (github, email), then right column (linkedin, facebook) —
-// filled column-by-column via grid-flow-col + grid-rows-2 below.
+// order matters here: the grid below fills column by column, so this comes
+// out as github + email on the left, linkedin + facebook on the right
 const socials = [
   { label: links.githubLabel, href: links.github, Icon: Github },
   { label: links.emailLabel, href: links.email, Icon: Mail },

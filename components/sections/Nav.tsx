@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 
+// The live Manila clock on the left side of the navbar. Clicking it scrolls
+// back to the top.
 function ManilaClock() {
   const [time, setTime] = useState<string>("");
 
@@ -41,6 +43,8 @@ const sections = [
   { id: "contact", label: "Contact" },
 ];
 
+// The top navbar. Full width while you're on the hero, then once you scroll
+// past it, it shrinks into the floating pill with the glow.
 export default function Nav() {
   const [detached, setDetached] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

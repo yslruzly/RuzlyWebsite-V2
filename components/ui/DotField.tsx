@@ -2,10 +2,9 @@
 
 import { useEffect, useRef } from "react";
 
-/**
- * Full-page animated dot field. White dots drift slowly upward-right,
- * twinkle, and gently repel from the cursor. Fixed behind all content.
- */
+// The dot background behind the whole site. Little dots drift up and to the
+// right, twinkle, and scoot away from the cursor. Sits behind everything and
+// never catches clicks.
 export default function DotField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -71,7 +70,7 @@ export default function DotField() {
           d.x += d.vx;
           d.y += d.vy;
 
-          // gentle cursor repulsion
+          // nudge dots away from the cursor
           const dx = d.x - mouse.x;
           const dy = d.y - mouse.y;
           const dist2 = dx * dx + dy * dy;

@@ -4,12 +4,10 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
-/**
- * Inline rich link-preview: highlights a word in running text and, on hover
- * or click, reveals a card with a photo and a frosted info panel — the
- * "unfurl" style used for shared links. Built from <span>s so it stays valid
- * HTML inside a <p>.
- */
+// The "UE - Manila" hover card in the About text. Hover or tap the
+// underlined word and a little preview pops up with a photo of the campus,
+// like when you paste a link in a chat app. It's all spans instead of divs
+// because it lives inside a <p> and divs aren't valid there.
 export default function CampusPreview({
   label,
   domain,
@@ -26,7 +24,7 @@ export default function CampusPreview({
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLSpanElement>(null);
 
-  // Close on Escape or a pointer/tap outside (mainly for click-to-open on touch).
+  // close on Esc or a tap anywhere outside, mostly for phones where there's no hover
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {

@@ -3,10 +3,9 @@
 import { useEffect, useRef } from "react";
 import { MASK_B64, MASK_H, MASK_W } from "@/lib/land-mask";
 
-/**
- * Rotating ASCII world with real continents (Natural Earth land mask)
- * and a pulsing MANILA marker. Adapted from John's rotating-ascii-world.
- */
+// The spinning ASCII earth in the contact section. The continents are real
+// shapes (a land mask baked into lib/land-mask.ts) and there's a blinking
+// MANILA marker on home.
 export default function AsciiGlobe({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -20,15 +19,14 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // On phones we render the globe as a single static frame instead of
-    // animating it. Mobile Safari is very slow at per-frame fillText (this
-    // scene rasterizes ~110 text rows every frame through a sub-pixel scale),
-    // and a few seconds of that sustained load makes iOS reload/kill the tab.
-    // A static globe still shows the continents and the Manila marker.
+    // On phones the globe is one still frame instead of spinning. Drawing
+    // ~110 rows of text every single frame is too heavy for mobile Safari,
+    // after a few seconds iOS would just kill the tab. A frozen globe still
+    // shows the continents and the Manila marker so it's an okay trade.
     const isSmall = window.matchMedia("(max-width: 768px)").matches;
     const staticOnly = prefersReduced || isSmall;
 
-    // Lower the point-cloud resolution on phones too — cheaper single frame.
+    // fewer points on phones too, cheaper to draw
     const COLS = 110;
     const ROWS = 110;
     const LON_STEPS = isSmall ? 220 : 340;
@@ -130,16 +128,16 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
 
     const TWO_PI = Math.PI * 2;
     const ROT_SPEED = staticOnly ? 0 : 0.26; // radians per second
-    // Start with Manila facing the viewer
+    // start rotated so Manila faces you
     let theta = ((-manilaLon % TWO_PI) + TWO_PI) % TWO_PI;
     let t = 0;
     let lastNow: number | null = null;
     let raf = 0;
 
-    // Only animate while the globe is actually on screen and the tab is
-    // visible. It lives at the very bottom of the page, so without this the
-    // heavy loop would run from first paint — a real battery/crash risk on
-    // mobile — even though nobody can see it yet.
+    // only spin while the globe is actually on screen and the tab is active.
+    // it sits at the very bottom of the page, so without this check the heavy
+    // draw loop would be running the whole time you're reading the hero,
+    // burning battery on something you can't even see yet
     let inView = false;
     let running = false;
 
@@ -300,8 +298,7 @@ export default function AsciiGlobe({ className = "" }: { className?: string }) {
         setFont();
       }
 
-      // On phones / reduced motion the scene is static, so one frame is
-      // enough — don't keep the loop (and the CPU) alive.
+      // static mode only needs this one frame, stop here instead of looping
       if (staticOnly || !running) {
         running = false;
         return;
