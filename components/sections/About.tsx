@@ -6,7 +6,7 @@ import MobileMacbookChatbot from "@/components/ui/MobileMacbookChatbot";
 
 export default function About() {
   return (
-    <section id="about" className="border-t border-line">
+    <section id="about">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
         <Reveal>
           <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">

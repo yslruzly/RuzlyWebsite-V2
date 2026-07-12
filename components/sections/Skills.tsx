@@ -12,7 +12,7 @@ export default function Skills() {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <section id="skills" className="border-t border-line bg-surface/40">
+    <section id="skills" className="bg-surface/40">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
         <Reveal>
           <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">

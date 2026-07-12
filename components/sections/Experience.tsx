@@ -69,7 +69,7 @@ export default function Experience() {
   const n = EXPERIENCES.length;
 
   return (
-    <section id="experience" className="border-t border-line bg-surface/40">
+    <section id="experience" className="bg-surface/40">
       {/* this tall wrapper is what gives the section its scroll distance while the panel stays pinned */}
       <div ref={outerRef} className="relative h-[260svh]">
         <div ref={stickyRef} className="sticky top-0 flex h-svh items-center overflow-hidden">

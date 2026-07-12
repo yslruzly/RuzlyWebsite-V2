@@ -174,7 +174,7 @@ export default function CommunityChat() {
   }
 
   return (
-    <section id="chat" className="border-t border-line">
+    <section id="chat">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
         <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1fr_1.2fr]">
           <Reveal>

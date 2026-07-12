@@ -14,7 +14,7 @@ const socials = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="border-t border-line">
+    <section id="contact">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
         <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_1fr]">
           <Reveal>
