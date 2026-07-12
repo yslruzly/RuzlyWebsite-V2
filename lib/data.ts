@@ -41,25 +41,25 @@ export const SKILLS: SkillItem[] = [
   {
     Icon: Code2,
     name: "Frontend",
-    desc: "Developing responsive, user-centered front-end interfaces with clean, maintainable code and a focus on performance and seamless user experience.",
+    desc: "Dashboards, landing pages, and interactive tools — with the animations, loading states, and small details that make a UI feel finished.",
     tags: ["React", "TypeScript", "Next.js", "Tailwind"],
   },
   {
     Icon: Terminal,
     name: "Backend",
-    desc: "Developing reliable and scalable backend systems with a focus on clean architecture, optimized performance, and efficient APIs.",
+    desc: "APIs built and tested behind deployed applications: authentication flows, RAG retrieval pipelines, and rate-limited public endpoints.",
     tags: ["Node.js", "Python", "PostgreSQL", "Postman", "Prisma", "tRPC", "Docker", "Firebase", "Supabase"],
   },
   {
     Icon: Pencil,
     name: "Design & Media",
-    desc: "Creating visually engaging graphics, digital content, and 3D visuals with a focus on clarity, creativity, and meaningful visual impact.",
+    desc: "Working knowledge of Figma, Photoshop, and Blender — enough to create graphics, mock up interfaces, and handle basic 3D when a project needs it.",
     tags: ["Figma", "Canva", "Adobe PS", "Blender"],
   },
   {
     Icon: Cpu,
     name: "Infrastructure",
-    desc: "Deploying and managing scalable cloud-based applications using modern platforms.",
+    desc: "I deploy and run on Vercel — CI/CD from GitHub, preview builds, environment management — with AWS fundamentals for when projects outgrow it.",
     tags: ["AWS", "Vercel"],
   },
 ];

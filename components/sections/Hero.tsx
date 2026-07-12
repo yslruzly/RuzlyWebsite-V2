@@ -12,8 +12,7 @@ const BENDS_DARK = ["#0a4531", "#0a4531", "#0a4531"];
 const BENDS_LIGHT = ["#343738", "#343738", "#343738"];
 
 // The first thing you see: my name (the letters run from your cursor), the
-// "I build" typewriter line, the intro paragraph, and the terminal with my
-// photo on the right.
+// "I build" typewriter line, and the terminal with my photo on the right.
 export default function Hero() {
   const reduce = useReducedMotion();
 
@@ -61,7 +60,7 @@ export default function Hero() {
 
       <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
         <div>
-          <h1 className="text-[clamp(2.6rem,7vw,5rem)] leading-[1.02] font-semibold tracking-tight">
+          <h1 className="text-[clamp(3.2rem,9vw,6.75rem)] leading-[1.02] font-semibold tracking-tight">
             <RepelText text="Ruzly" delay={0.2} />{" "}
             <RepelText text="Macatula" delay={0.35} className="text-mist" />
           </h1>
@@ -70,7 +69,7 @@ export default function Hero() {
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mt-5 font-jet text-sm tracking-wide text-mist sm:text-base"
+            className="mt-6 font-jet text-base tracking-wide text-mist sm:text-lg"
           >
             <TypewriterRotate
               prefix="I build → "
@@ -85,9 +84,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.9 }}
             className="mt-6 max-w-xl font-jet text-base leading-relaxed text-mist sm:text-lg"
           >
-            Building digital experiences where clean code meets thoughtful
-            design, specializing in modern web technologies, scalable systems,
-            and interfaces that feel alive.
+            Aspiring AI &amp; Software Engineer
           </motion.p>
 
           <motion.div
