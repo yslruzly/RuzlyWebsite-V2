@@ -9,8 +9,9 @@ import { Reveal } from "@/components/ui/motion-primitives";
 // list, and new ones show up live without a refresh. Messages are saved
 // through /api/chat, not straight from here, so nobody can fake my badge.
 
-// Gives every visitor a little cartoon avatar generated from their name.
-// Same name always gets the same face. Free, no signup, no key.
+// Gives every visitor a little cartoon avatar. The seed is the name plus a
+// random id saved in their browser, so the same person always gets the same
+// face but two different "Alex"es don't. Free, no signup, no key.
 // docs: https://www.dicebear.com/how-to-use/http-api
 const avatarFor = (name: string) =>
   `https://api.dicebear.com/9.x/notionists/svg?seed=${encodeURIComponent(
@@ -35,6 +36,7 @@ export default function CommunityChat() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ownerKey, setOwnerKey] = useState<string | null>(null);
+  const [visitorId, setVisitorId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   // Bot traps, checked on the server. `website` is a decoy input hidden with
@@ -74,6 +76,16 @@ export default function CommunityChat() {
       setOwnerKey(stored);
       setConfirmedName("Ruzly");
     }
+
+    // A random id that sticks to this browser. It goes into the avatar seed
+    // so two visitors who both type "Alex" still get different faces. Not an
+    // identity, not tracking — it never leaves the avatar.
+    let vid = localStorage.getItem("chatVisitorId");
+    if (!vid) {
+      vid = crypto.randomUUID();
+      localStorage.setItem("chatVisitorId", vid);
+    }
+    setVisitorId(vid);
   }, []);
 
   // Grab the last 100 messages on load, then keep a socket open so anything
@@ -145,6 +157,7 @@ export default function CommunityChat() {
         message: draft.trim(),
         website,
         openedAt: openedAt.current,
+        ...(visitorId ? { visitorId } : {}),
         ...(ownerKey ? { ownerKey } : {}),
       }),
     });
@@ -163,7 +176,7 @@ export default function CommunityChat() {
   return (
     <section id="chat" className="border-t border-line">
       <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-32">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
+        <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1fr_1.2fr]">
           <Reveal>
             <p className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] section-eyebrow uppercase">
               <MessagesSquare size={14} strokeWidth={1.5} aria-hidden="true" />
@@ -185,7 +198,7 @@ export default function CommunityChat() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="flex h-[440px] flex-col overflow-hidden rounded-xl border border-line bg-surface">
+            <div className="flex h-[70dvh] max-h-110 min-h-90 flex-col overflow-hidden rounded-xl border border-line bg-surface sm:h-110">
               <div className="flex items-center justify-between border-b border-line px-4 py-2.5 font-mono text-[11px] text-ash">
                 <span>💬 {messages.length} messages</span>
                 <span>public · be kind</span>
@@ -193,7 +206,7 @@ export default function CommunityChat() {
 
               <div
                 ref={listRef}
-                className="flex-1 space-y-4 overflow-y-auto p-4"
+                className="flex-1 space-y-4 overflow-y-auto p-3 sm:p-4"
               >
                 {messages.length === 0 && (
                   <p className="font-mono text-xs text-ash">
@@ -204,13 +217,17 @@ export default function CommunityChat() {
                   <div key={m.id} className="flex items-start gap-2.5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={m.is_owner ? "/images/pfp.jpg" : avatarFor(m.name)}
+                      src={
+                        m.is_owner
+                          ? "/images/pfp.jpg"
+                          : avatarFor(m.avatar_seed ?? m.name)
+                      }
                       alt=""
                       loading="lazy"
                       className="h-8 w-8 shrink-0 rounded-full bg-paper/10 object-cover"
                     />
                     <div className="min-w-0">
-                      <p className="flex items-center gap-1.5 font-mono text-[11px] text-ash">
+                      <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-mono text-[11px] text-ash">
                         <span className={m.is_owner ? "text-paper" : "text-mist"}>
                           {m.name}
                         </span>
@@ -235,10 +252,10 @@ export default function CommunityChat() {
                 ))}
               </div>
 
-              <div className="border-t border-line px-4 py-3">
+              <div className="border-t border-line px-3 py-3 sm:px-4">
                 {!confirmedName ? (
                   <form
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-2 sm:gap-3"
                     onSubmit={(e) => {
                       e.preventDefault();
                       if (!name.trim()) return;
@@ -253,7 +270,7 @@ export default function CommunityChat() {
                   >
                     <label
                       htmlFor="chat-name"
-                      className="font-mono text-xs whitespace-nowrap text-mist"
+                      className="font-mono text-xs whitespace-nowrap text-mist max-sm:sr-only"
                     >
                       what&apos;s your name?
                     </label>
@@ -262,20 +279,20 @@ export default function CommunityChat() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       maxLength={20}
-                      placeholder="your name"
+                      placeholder="what's your name?"
                       autoComplete="off"
-                      className="min-w-0 flex-1 bg-transparent font-jet text-sm outline-none placeholder:text-ash"
+                      className="min-w-0 flex-1 bg-transparent font-jet text-base outline-none placeholder:text-ash sm:text-sm"
                     />
                     <button
                       type="submit"
-                      className="rounded-md border border-line px-3 py-1.5 font-mono text-[11px] text-ash transition-colors hover:border-mist hover:text-paper"
+                      className="shrink-0 rounded-md border border-line px-3 py-2 font-mono text-[11px] text-ash transition-colors hover:border-mist hover:text-paper sm:py-1.5"
                     >
                       next ↵
                     </button>
                   </form>
                 ) : (
                   <form
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-2 sm:gap-3"
                     onSubmit={(e) => {
                       e.preventDefault();
                       send();
@@ -297,7 +314,17 @@ export default function CommunityChat() {
 
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={ownerKey ? "/images/pfp.jpg" : avatarFor(confirmedName)}
+                      src={
+                        ownerKey
+                          ? "/images/pfp.jpg"
+                          : // same name#id seed the server saves, so the
+                            // preview face matches the one that gets posted
+                            avatarFor(
+                              visitorId
+                                ? `${confirmedName}#${visitorId}`
+                                : confirmedName,
+                            )
+                      }
                       alt={`Posting as ${confirmedName}`}
                       className="h-6 w-6 rounded-full bg-paper/10 object-cover"
                     />
@@ -311,12 +338,12 @@ export default function CommunityChat() {
                       maxLength={160}
                       placeholder={`say something as ${confirmedName}…`}
                       autoComplete="off"
-                      className="min-w-0 flex-1 bg-transparent font-jet text-sm outline-none placeholder:text-ash"
+                      className="min-w-0 flex-1 bg-transparent font-jet text-base outline-none placeholder:text-ash sm:text-sm"
                     />
                     <button
                       type="submit"
                       disabled={sending}
-                      className="rounded-md border border-line px-3 py-1.5 font-mono text-[11px] text-ash transition-colors hover:border-mist hover:text-paper disabled:opacity-50"
+                      className="shrink-0 rounded-md border border-line px-3 py-2 font-mono text-[11px] text-ash transition-colors hover:border-mist hover:text-paper disabled:opacity-50 sm:py-1.5"
                     >
                       {sending ? "…" : "send ↵"}
                     </button>

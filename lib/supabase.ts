@@ -12,5 +12,8 @@ export type ChatMessage = {
   city: string | null;
   device: "desktop" | "mobile";
   is_owner: boolean;
+  // what the avatar is drawn from. name + a per-browser id, so two people
+  // called Alex don't share a face. Old rows are null → fall back to name.
+  avatar_seed: string | null;
   created_at: string;
 };

@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
     ownerKey?: string;
     website?: string;
     openedAt?: number;
+    visitorId?: string;
   };
   try {
     body = await req.json();
@@ -142,12 +143,23 @@ export async function POST(req: NextRequest) {
   const ua = req.headers.get("user-agent") ?? "";
   const device = /mobile|android|iphone|ipad/i.test(ua) ? "mobile" : "desktop";
 
+  // What the avatar gets drawn from. The browser sends a random id it made up
+  // once and keeps in localStorage, so two visitors with the same name still
+  // get different faces. Only [-a-zA-Z0-9] survives the cleanup — it's going
+  // into a URL on everyone's screen, so anything fancier gets stripped. If a
+  // visitor doesn't send one (old tab, script), the seed is just the name,
+  // which is exactly the old behaviour.
+  const vid = (body.visitorId ?? "").replace(/[^a-zA-Z0-9-]/g, "").slice(0, 36);
+  const avatarSeed = vid ? `${name}#${vid}` : name;
+
   const { error } = await db.from("messages").insert({
     // my posts always show up as Ruzly, whatever name was typed in the box
     name: isOwner ? "Ruzly" : name,
     message,
     city: locationFrom(req),
     device,
+    // owner posts use my photo, not a generated avatar, so no seed needed
+    ...(isOwner ? {} : { avatar_seed: avatarSeed }),
     // only set this on my own posts, so normal messages still save fine even
     // if the is_owner column hasn't been added yet
     ...(isOwner ? { is_owner: true } : {}),
