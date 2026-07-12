@@ -151,8 +151,7 @@ export default function CommunityChat() {
               Leave a <span className="text-mist">message.</span>
             </h2>
             <p className="mt-6 max-w-md font-jet text-base text-mist">
-              A public guestbook for anyone passing through. Your name, your
-              city (roughly, from your IP), and whatever you want to say.
+              Say hi, leave a note, see who else is here. No account, no signup — just a name and a message.
             </p>
             <p className="mt-8 flex items-center gap-2.5 font-mono text-xs text-ash">
               <span className="relative flex h-2 w-2">
