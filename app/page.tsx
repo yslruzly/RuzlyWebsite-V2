@@ -1,6 +1,5 @@
 import Nav from "@/components/sections/Nav";
 import Hero from "@/components/sections/Hero";
-import Marquee from "@/components/sections/Marquee";
 import About from "@/components/sections/About";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
@@ -19,7 +18,6 @@ export default function Home() {
       <div className="relative z-10">
         <Nav />
         <Hero />
-        <Marquee />
         <About />
         <Skills />
         <Projects />

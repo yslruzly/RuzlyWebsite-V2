@@ -97,7 +97,7 @@ export const projects: Project[] = [
     name: "ResearchAI",
     tagline: "Agentic research, not search results",
     description:
-      "An AI-powered research assistant that helps users explore and synthesize information across multiple topics. Delivers structured insights, source breakdowns, and key takeaways through a clean, conversational interface.",
+      "Type a topic and get a short research report with linked sources. It searches the live web and reads the pages — anything that fails to load is excluded, so the report only reflects what actually got read.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Groq Llama", "Jina AI"],
     kind: "AI / Agent",
     image: "/images/ResearchAI.png",
@@ -165,12 +165,6 @@ export const EXPERIENCES: ExpItem[] = [
     company: "N/A · Remote",
     desc: "Marked the beginning of my coding journey, where I learned basic programming concepts and logic.",
   },
-];
-
-export const stackMarquee = [
-  "React", "TypeScript", "Next.js", "Tailwind CSS", "Node.js", "Python",
-  "PostgreSQL", "Supabase", "Prisma", "tRPC", "Docker", "Firebase",
-  "Vercel", "AWS", "Figma", "Blender",
 ];
 
 export const links = {

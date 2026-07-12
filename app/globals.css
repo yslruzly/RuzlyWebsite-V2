@@ -8,7 +8,6 @@
   --color-line: #1f1f23;
   --color-surface: #0a0a0b;
 
-  --animate-marquee: marquee 32s linear infinite;
   --animate-pulse-dot: pulse-dot 2.4s ease-out infinite;
   --animate-caret: caret-blink 0.85s step-end infinite;
 
@@ -21,16 +20,6 @@
 
     50% {
       opacity: 0;
-    }
-  }
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-
-    to {
-      transform: translateX(-50%);
     }
   }
 
@@ -86,8 +75,9 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--color-ink);
-  /* clip instead of hidden: stops the marquee from causing sideways scroll
-     but keeps position sticky working in the Experience section */
+  /* clip instead of hidden: stops full-width elements (like the hero's
+     w-screen background) from causing sideways scroll but keeps position
+     sticky working in the Experience section */
   overflow-x: clip;
 }
 

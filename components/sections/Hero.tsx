@@ -48,7 +48,7 @@ export default function Hero() {
     >
       {/* the flowing color background, hero only. breaks out of the max-w
           container so it covers the full viewport width, and fades near the
-          bottom so it doesn't hard-cut at the marquee */}
+          bottom so it doesn't hard-cut at the next section */}
       <div className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 opacity-60 [mask-image:linear-gradient(to_bottom,black_78%,transparent)]">
         <ColorBends
           colors={isSmall ? bends.slice(0, 2) : bends}
