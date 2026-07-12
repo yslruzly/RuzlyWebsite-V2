@@ -33,7 +33,13 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { name?: string; message?: string; ownerKey?: string };
+  let body: {
+    name?: string;
+    message?: string;
+    ownerKey?: string;
+    website?: string;
+    openedAt?: number;
+  };
   try {
     body = await req.json();
   } catch {
@@ -48,6 +54,25 @@ export async function POST(req: NextRequest) {
       { error: "Name and message are required." },
       { status: 400 },
     );
+  }
+
+  // Bot traps. Two of them:
+  //
+  // 1. "website" is a decoy field hidden with CSS. A real person never sees it
+  //    so it always comes back empty. Bots read the raw HTML, see an input, and
+  //    fill it in because that's what they do.
+  // 2. openedAt is when the chat box loaded. Nobody types a name and a message
+  //    in under a second, so anything that fast is a script.
+  //
+  // Either way I pretend it worked. If I returned an error the bot would know
+  // it got caught and could adjust. Silently dropping it means the spammer
+  // thinks they're posting into the void, which they are.
+  const trapped =
+    !!body.website?.trim() ||
+    (typeof body.openedAt === "number" && Date.now() - body.openedAt < 1000);
+
+  if (trapped) {
+    return NextResponse.json({ ok: true });
   }
 
   // Owner mode. If the request carries my secret, the message gets my badge

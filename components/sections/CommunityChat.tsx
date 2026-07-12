@@ -37,6 +37,12 @@ export default function CommunityChat() {
   const [ownerKey, setOwnerKey] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  // Bot traps, checked on the server. `website` is a decoy input hidden with
+  // CSS that only a bot would ever fill in, and openedAt lets the server see
+  // if a "message" was sent impossibly fast. See the notes in /api/chat.
+  const [website, setWebsite] = useState("");
+  const openedAt = useRef(Date.now());
+
   // How I log in as the owner. I visit the site once with #owner=MY_SECRET,
   // it saves the key into this browser and wipes it out of the address bar.
   // After that I just use the normal URL and my messages get the badge.
@@ -137,6 +143,8 @@ export default function CommunityChat() {
       body: JSON.stringify({
         name: confirmedName,
         message: draft.trim(),
+        website,
+        openedAt: openedAt.current,
         ...(ownerKey ? { ownerKey } : {}),
       }),
     });
@@ -273,6 +281,20 @@ export default function CommunityChat() {
                       send();
                     }}
                   >
+                    {/* The bot trap. Hidden from people, and screen readers are
+                        told to skip it, so only a script would ever fill it in.
+                        tabIndex -1 keeps keyboard users from tabbing into it. */}
+                    <input
+                      type="text"
+                      name="website"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                    />
+
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={ownerKey ? "/images/pfp.jpg" : avatarFor(confirmedName)}
