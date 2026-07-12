@@ -4,9 +4,10 @@ import { createClient } from "@supabase/supabase-js";
 
 // Server-side path for the chat. GET returns the visitor's coarse location
 // (from Vercel's IP geolocation headers); POST inserts a message.
+// trim() so stray whitespace pasted into env vars can't break auth
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(),
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!.trim(),
 );
 
 const NAME_MAX = 20;
@@ -47,8 +48,8 @@ export async function POST(req: NextRequest) {
   // owner badge. checked here on the server, so the secret never ships
   // to visitors. constant-time compare so response timing can't leak
   // how much of a guess matched
-  const secret = process.env.CHAT_OWNER_SECRET;
-  const guess = body.ownerKey;
+  const secret = process.env.CHAT_OWNER_SECRET?.trim();
+  const guess = body.ownerKey?.trim();
   const isOwner =
     !!secret &&
     typeof guess === "string" &&
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
   // service role client. only created when actually posting as owner
   let client = supabase;
   if (isOwner) {
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
     if (!serviceKey) {
       console.error(
         "owner post attempted but SUPABASE_SERVICE_ROLE_KEY is not set",
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
         { status: 500 },
       );
     }
-    client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey);
+    client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(), serviceKey);
   }
 
   const ua = req.headers.get("user-agent") ?? "";
