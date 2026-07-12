@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "clsx": "^2.1.1",
     "geist": "^1.7.2",
     "lucide-react": "^0.469.0",

@@ -132,9 +132,12 @@ export default function CommunityChat() {
     });
     setSending(false);
     if (!res.ok) {
-      setError("Message didn't send. Try again.");
+      // show the server's reason when it has one (rate limit, too long, …)
+      const body = await res.json().catch(() => null);
+      setError(body?.error ?? "Message didn't send. Try again.");
       return;
     }
+    setError(null);
     setDraft("");
   }
 

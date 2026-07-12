@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { ipFrom, ratelimit } from "@/lib/rate-limit";
 
 // Server-side path for the chat. GET returns the visitor's coarse location
 // (from Vercel's IP geolocation headers); POST inserts a message.
@@ -55,6 +56,20 @@ export async function POST(req: NextRequest) {
     typeof guess === "string" &&
     guess.length === secret.length &&
     timingSafeEqual(Buffer.from(guess), Buffer.from(secret));
+
+  // rate limit by IP: 5 messages a minute. checked after the owner test so
+  // I'm never locked out of my own guestbook, and after validation so junk
+  // requests don't burn quota
+  if (!isOwner && ratelimit) {
+    const { success, reset } = await ratelimit.limit(ipFrom(req));
+    if (!success) {
+      const seconds = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
+      return NextResponse.json(
+        { error: `Slow down a little — try again in ${seconds}s.` },
+        { status: 429, headers: { "Retry-After": String(seconds) } },
+      );
+    }
+  }
 
   // owner rows are blocked for the anon key by RLS, so they need the
   // service role client. only created when actually posting as owner
