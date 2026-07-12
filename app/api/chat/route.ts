@@ -2,18 +2,25 @@ import { timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { ipFrom, ratelimit } from "@/lib/rate-limit";
+import { hasLink, hasProfanity } from "@/lib/moderation";
 
-// The server side of the community chat. GET just tells the visitor what city
-// they're in, POST saves a message. Messages go through here instead of
-// straight to Supabase so the owner badge and the rate limit can't be faked
-// from the browser.
+// The server side of the community chat. GET tells the visitor what city
+// they're in, POST saves a message.
+//
+// This route is the ONLY way a message can get into the database. The anon key
+// used to be allowed to insert, which meant anyone could read it out of the
+// site's JavaScript and POST straight to Supabase, skipping the rate limit, the
+// honeypot and the profanity filter. So I took that permission away: the anon
+// key can only read now, and everything below runs on the service role key.
+// That key is server-only and never leaves this file's environment.
 
 // .trim() because a stray newline once snuck into a key I pasted into Vercel
 // and auth silently broke everywhere. Cheap insurance.
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(),
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!.trim(),
-);
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
+const db = serviceKey
+  ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(), serviceKey)
+  : null;
 
 const NAME_MAX = 20;
 const MESSAGE_MAX = 160;
@@ -105,29 +112,37 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // The database itself refuses to save an owner message from the public key,
-  // which is what stops anyone from faking the badge. So my own messages need
-  // the service role key, which is allowed to bypass that rule. Only built
-  // when I'm actually the one posting.
-  let client = supabase;
-  if (isOwner) {
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-    if (!serviceKey) {
-      console.error(
-        "owner post attempted but SUPABASE_SERVICE_ROLE_KEY is not set",
-      );
+  // Keep it clean. Real people get a real reason here (unlike the bot traps,
+  // which fail silently) because someone who swore at the guestbook should
+  // know why their message didn't show up. I skip these checks for myself so
+  // I can still post links to my own projects.
+  if (!isOwner) {
+    if (hasProfanity(message) || hasProfanity(name)) {
       return NextResponse.json(
-        { error: "Owner mode is not configured on the server." },
-        { status: 500 },
+        { error: "Let's keep it friendly — try rewording that." },
+        { status: 400 },
       );
     }
-    client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(), serviceKey);
+    if (hasLink(message)) {
+      return NextResponse.json(
+        { error: "Links aren't allowed here, sorry." },
+        { status: 400 },
+      );
+    }
+  }
+
+  if (!db) {
+    console.error("SUPABASE_SERVICE_ROLE_KEY is not set, cannot save messages");
+    return NextResponse.json(
+      { error: "The chat isn't set up right now." },
+      { status: 500 },
+    );
   }
 
   const ua = req.headers.get("user-agent") ?? "";
   const device = /mobile|android|iphone|ipad/i.test(ua) ? "mobile" : "desktop";
 
-  const { error } = await client.from("messages").insert({
+  const { error } = await db.from("messages").insert({
     // my posts always show up as Ruzly, whatever name was typed in the box
     name: isOwner ? "Ruzly" : name,
     message,

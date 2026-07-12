@@ -51,3 +51,18 @@ drop policy "public insert" on public.messages;
 create policy "public insert"
   on public.messages for insert
   with check (is_owner = false);
+
+-- ─────────────────────────────────────────────────────────────
+-- Server-only inserts (added later, run after the block above).
+--
+-- Found a hole: the anon key is public, it ships inside the site's
+-- JavaScript, so anyone could POST straight to Supabase and skip my
+-- API route completely. That meant the rate limit, the honeypot and
+-- the profanity filter could all be walked right past.
+--
+-- Fix is to drop the public insert policy entirely. With no insert
+-- policy, RLS denies inserts by default, so the anon key can now only
+-- READ. Every new message has to go through /api/chat, which uses the
+-- service role key and is the only place the checks live.
+-- ─────────────────────────────────────────────────────────────
+drop policy "public insert" on public.messages;
