@@ -6,6 +6,7 @@ import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import Contact from "@/components/sections/Contact";
+import CommunityChat from "@/components/sections/CommunityChat";
 import DotField from "@/components/ui/DotField";
 import ChatbotWidget from "@/components/widgets/ChatbotWidget";
 import RadioWidget from "@/components/widgets/RadioWidget";
@@ -23,6 +24,7 @@ export default function Home() {
         <Skills />
         <Projects />
         <Experience />
+        <CommunityChat />
         <Contact />
       </div>
       <ChatbotWidget />
