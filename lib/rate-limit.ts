@@ -1,13 +1,15 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-// Rate limiter for the chat, backed by Upstash Redis over HTTP (Vercel's
-// serverless functions can't hold the TCP connection a normal Redis client
-// wants). Sliding window: 5 messages per minute per IP.
+// Stops anyone from flooding the community chat. Everyone gets 5 messages a
+// minute, counted per IP, and the counters live in Upstash Redis.
 //
-// If the Upstash env vars aren't set, this stays null and the API route
-// just skips the check — so local dev and any deploy without Upstash keeps
-// working instead of hard-failing.
+// It's the REST version of Redis on purpose. Vercel functions spin up and die
+// per request, so they can't keep a normal Redis connection open.
+//
+// If the Upstash keys are missing this just stays null and the chat skips the
+// check entirely. I'd rather the guestbook keep working without a limiter than
+// have the whole thing 500 because one env var didn't get set.
 
 const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
 const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
@@ -22,8 +24,9 @@ export const ratelimit =
       })
     : null;
 
-// Vercel puts the real visitor IP here. Falls back to a constant locally,
-// which is fine: it just means all local requests share one bucket.
+// Vercel sticks the visitor's real IP in this header. On localhost there
+// isn't one, so everything falls back to sharing a single "local" bucket,
+// which is fine for testing.
 export function ipFrom(req: Request): string {
   const forwarded = req.headers.get("x-forwarded-for");
   return forwarded?.split(",")[0]?.trim() || "local";

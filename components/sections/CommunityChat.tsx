@@ -5,8 +5,13 @@ import { MessagesSquare, Smartphone, Monitor } from "lucide-react";
 import { supabase, type ChatMessage } from "@/lib/supabase";
 import { Reveal } from "@/components/ui/motion-primitives";
 
-// DiceBear generates a deterministic avatar from any seed string —
-// same trick bryllim.com uses. Free, no key, returns an SVG.
+// The public guestbook. Anyone can leave a message, everyone sees the same
+// list, and new ones show up live without a refresh. Messages are saved
+// through /api/chat, not straight from here, so nobody can fake my badge.
+
+// Gives every visitor a little cartoon avatar generated from their name.
+// Same name always gets the same face. Free, no signup, no key.
+// docs: https://www.dicebear.com/how-to-use/http-api
 const avatarFor = (name: string) =>
   `https://api.dicebear.com/9.x/notionists/svg?seed=${encodeURIComponent(
     name,
@@ -32,10 +37,13 @@ export default function CommunityChat() {
   const [ownerKey, setOwnerKey] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // owner mode: visiting the site once with #owner=SECRET saves the key in
-  // this browser (then cleans the URL). a hash fragment never gets sent to
-  // any server, so the secret can't end up in request logs. the old
-  // ?owner= form still works just in case. visitors never see any of this
+  // How I log in as the owner. I visit the site once with #owner=MY_SECRET,
+  // it saves the key into this browser and wipes it out of the address bar.
+  // After that I just use the normal URL and my messages get the badge.
+  //
+  // It's a #hash on purpose: browsers never send the part after # to the
+  // server, so my secret can't end up sitting in Vercel's request logs.
+  // The old ?owner= version still works, just in case I use an old link.
   useEffect(() => {
     const url = new URL(window.location.href);
     let key: string | null = null;
@@ -62,7 +70,8 @@ export default function CommunityChat() {
     }
   }, []);
 
-  // Initial load + realtime inserts.
+  // Grab the last 100 messages on load, then keep a socket open so anything
+  // new anyone posts pops into the list on its own.
   useEffect(() => {
     let active = true;
 
@@ -91,7 +100,8 @@ export default function CommunityChat() {
     };
   }, []);
 
-  // Live "viewing now" count via Supabase Presence.
+  // The "x people viewing now" counter. Every open tab announces itself on a
+  // shared channel and counts how many others are there.
   useEffect(() => {
     const channel = supabase.channel("portfolio-presence", {
       config: { presence: { key: crypto.randomUUID() } },
@@ -112,7 +122,7 @@ export default function CommunityChat() {
     };
   }, []);
 
-  // Keep the newest message in view.
+  // scroll to the bottom whenever a message arrives
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
   }, [messages]);
@@ -132,7 +142,8 @@ export default function CommunityChat() {
     });
     setSending(false);
     if (!res.ok) {
-      // show the server's reason when it has one (rate limit, too long, …)
+      // use whatever reason the server gave (sending too fast, message too
+      // long...) so people see something useful instead of a generic error
       const body = await res.json().catch(() => null);
       setError(body?.error ?? "Message didn't send. Try again.");
       return;

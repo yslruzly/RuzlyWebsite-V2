@@ -3,9 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { ipFrom, ratelimit } from "@/lib/rate-limit";
 
-// Server-side path for the chat. GET returns the visitor's coarse location
-// (from Vercel's IP geolocation headers); POST inserts a message.
-// trim() so stray whitespace pasted into env vars can't break auth
+// The server side of the community chat. GET just tells the visitor what city
+// they're in, POST saves a message. Messages go through here instead of
+// straight to Supabase so the owner badge and the rate limit can't be faked
+// from the browser.
+
+// .trim() because a stray newline once snuck into a key I pasted into Vercel
+// and auth silently broke everywhere. Cheap insurance.
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(),
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!.trim(),
@@ -15,7 +19,8 @@ const NAME_MAX = 20;
 const MESSAGE_MAX = 160;
 
 function locationFrom(req: NextRequest) {
-  // Set automatically by Vercel in deployment; absent on localhost.
+  // Vercel fills these in from the visitor's IP once it's deployed. On
+  // localhost they don't exist, so city just comes back null.
   const city = req.headers.get("x-vercel-ip-city");
   const country = req.headers.get("x-vercel-ip-country");
   return city
@@ -45,10 +50,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // owner mode: if the request carries my secret, the message gets the
-  // owner badge. checked here on the server, so the secret never ships
-  // to visitors. constant-time compare so response timing can't leak
-  // how much of a guess matched
+  // Owner mode. If the request carries my secret, the message gets my badge
+  // and my photo. The check happens here on the server, so the secret never
+  // ends up in anything a visitor can read.
+  //
+  // timingSafeEqual instead of === so the reply always takes the same amount
+  // of time. A normal comparison bails early on the first wrong character,
+  // and in theory you could measure that to guess the secret one letter at a
+  // time. Very unlikely over the internet, but it's one line either way.
   const secret = process.env.CHAT_OWNER_SECRET?.trim();
   const guess = body.ownerKey?.trim();
   const isOwner =
@@ -57,9 +66,9 @@ export async function POST(req: NextRequest) {
     guess.length === secret.length &&
     timingSafeEqual(Buffer.from(guess), Buffer.from(secret));
 
-  // rate limit by IP: 5 messages a minute. checked after the owner test so
-  // I'm never locked out of my own guestbook, and after validation so junk
-  // requests don't burn quota
+  // 5 messages a minute per IP. This runs after the owner check so I can never
+  // lock myself out of my own guestbook, and after the name/message checks so
+  // empty junk requests don't eat into the Upstash quota.
   if (!isOwner && ratelimit) {
     const { success, reset } = await ratelimit.limit(ipFrom(req));
     if (!success) {
@@ -71,8 +80,10 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // owner rows are blocked for the anon key by RLS, so they need the
-  // service role client. only created when actually posting as owner
+  // The database itself refuses to save an owner message from the public key,
+  // which is what stops anyone from faking the badge. So my own messages need
+  // the service role key, which is allowed to bypass that rule. Only built
+  // when I'm actually the one posting.
   let client = supabase;
   if (isOwner) {
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
@@ -92,18 +103,20 @@ export async function POST(req: NextRequest) {
   const device = /mobile|android|iphone|ipad/i.test(ua) ? "mobile" : "desktop";
 
   const { error } = await client.from("messages").insert({
-    // owner posts always show my name no matter what was typed
+    // my posts always show up as Ruzly, whatever name was typed in the box
     name: isOwner ? "Ruzly" : name,
     message,
     city: locationFrom(req),
     device,
-    // only sent for owner posts, so regular messages keep working even
-    // before the is_owner migration has been run
+    // only set this on my own posts, so normal messages still save fine even
+    // if the is_owner column hasn't been added yet
     ...(isOwner ? { is_owner: true } : {}),
   });
 
   if (error) {
-    // Shows the real reason in the dev-server terminal (RLS, bad key, etc.)
+    // prints the real reason in the terminal (RLS blocked it, bad key, missing
+    // column...). Visitors just get the friendly message below. This line has
+    // saved me every single time the chat broke.
     console.error("chat insert failed:", error.message, error.details);
     return NextResponse.json(
       { error: "Could not save the message. Try again." },
