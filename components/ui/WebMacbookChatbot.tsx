@@ -177,9 +177,11 @@ const MacbookChatbot: FC = () => {
     const onMove = (e: MouseEvent) => {
       if (!desktop) return;
       const rect = desktop.getBoundingClientRect();
+      // clamp so the terminal can't be dragged out of the desktop — keeps the
+      // title bar grabbable and the input on screen
       setTermPos({
-        x: Math.max(0, e.clientX - rect.left - dragOffset.x),
-        y: Math.max(28, e.clientY - rect.top - dragOffset.y),
+        x: Math.min(Math.max(0, e.clientX - rect.left - dragOffset.x), rect.width - 120),
+        y: Math.min(Math.max(28, e.clientY - rect.top - dragOffset.y), rect.height - 40),
       });
     };
     const onUp = () => setDragging(false);
@@ -204,7 +206,7 @@ const MacbookChatbot: FC = () => {
     setResult(null);
     setTestStatus("ready");
     setTestOpen(true);
-    setTimeout(() => testInputRef.current?.focus(), 80);
+    setTimeout(() => testInputRef.current?.focus({ preventScroll: true }), 80);
   };
 
   // keep the active line centred, monkeytype-style
@@ -277,7 +279,7 @@ const MacbookChatbot: FC = () => {
     } else {
       addLine("system", "Typing test aborted.");
     }
-    setTimeout(() => inputRef.current?.focus(), 50);
+    setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 50);
   };
   closeTestRef.current = closeTest;
 
@@ -307,7 +309,7 @@ const MacbookChatbot: FC = () => {
     setTimeout(() => {
       addLine("output", getBotReply(text));
       setTyping(false);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 50);
     }, 700);
   };
 
@@ -449,10 +451,13 @@ const MacbookChatbot: FC = () => {
                 height: "380px",
                 background: "radial-gradient(ellipse at 50% 30%, #10352a 0%, #0a2119 38%, #05120e 70%, #020806 100%)",
                 position: "relative",
-                overflow: "hidden",
+                // clip, not hidden: focusing the terminal input can programmatically
+                // scroll an overflow:hidden box, which shifted the wallpaper when the
+                // terminal was dragged near the edge. clip can never scroll.
+                overflow: "clip",
                 cursor: "default",
               }}
-              onClick={() => (testOpen ? testInputRef : inputRef).current?.focus()}
+              onClick={() => (testOpen ? testInputRef : inputRef).current?.focus({ preventScroll: true })}
             >
               {/* star glow halos */}
               <div style={{
