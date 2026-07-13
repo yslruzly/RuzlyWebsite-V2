@@ -94,7 +94,7 @@ export default function CommunityChat() {
     let active = true;
 
     supabase
-      .from("messages")
+      .from("CommunityMessages")
       .select("*")
       .order("created_at", { ascending: true })
       .limit(100)
@@ -106,7 +106,7 @@ export default function CommunityChat() {
       .channel("chat-inserts")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
+        { event: "INSERT", schema: "public", table: "CommunityMessages" },
         (payload) =>
           setMessages((prev) => [...prev, payload.new as ChatMessage]),
       )

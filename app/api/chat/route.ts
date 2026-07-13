@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
   const vid = (body.visitorId ?? "").replace(/[^a-zA-Z0-9-]/g, "").slice(0, 36);
   const avatarSeed = vid ? `${name}#${vid}` : name;
 
-  const { error } = await db.from("messages").insert({
+  const { error } = await db.from("CommunityMessages").insert({
     // my posts always show up as Ruzly, whatever name was typed in the box
     name: isOwner ? "Ruzly" : name,
     message,

@@ -66,3 +66,17 @@ create policy "public insert"
 -- service role key and is the only place the checks live.
 -- ─────────────────────────────────────────────────────────────
 drop policy "public insert" on public.messages;
+
+-- ─────────────────────────────────────────────────────────────
+-- Table rename (added later, run after the block above).
+--
+-- "messages" was too generic, so it's now "CommunityMessages". The name
+-- is mixed case, which in Postgres means it only works quoted — a bare
+-- CommunityMessages in SQL folds to lowercase and errors. supabase-js
+-- sends the name verbatim, so .from("CommunityMessages") is fine.
+--
+-- The rename carries the RLS policies, the column checks and the
+-- supabase_realtime publication membership along with it, so nothing
+-- above needs re-running.
+-- ─────────────────────────────────────────────────────────────
+alter table public.messages rename to "CommunityMessages";
