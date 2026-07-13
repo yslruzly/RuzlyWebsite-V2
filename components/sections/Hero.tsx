@@ -109,18 +109,18 @@ export default function Hero() {
           className="relative mx-auto w-full max-w-95 lg:max-w-sm lg:justify-self-end"
         >
           <HeroTerminal />
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.6, duration: 1 }}
+            className="pointer-events-none mt-6 hidden text-center font-mono text-[10px] tracking-[0.35em] text-ash sm:block"
+            aria-hidden="true"
+          >
+            SCROLL
+          </motion.div>
         </motion.div>
       </div>
-
-      <motion.div
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: 1 }}
-        className="pointer-events-none absolute bottom-8 left-1/2 hidden -translate-x-1/2 font-mono text-[10px] tracking-[0.35em] text-ash sm:block"
-        aria-hidden="true"
-      >
-        SCROLL
-      </motion.div>
     </section>
   );
 }

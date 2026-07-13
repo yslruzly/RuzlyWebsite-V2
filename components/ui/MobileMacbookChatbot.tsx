@@ -9,22 +9,18 @@ interface ChatMsg { from: "user" | "bot"; text: string; }
 
 const BOT_REPLIES: Record<string, string> = {
   default: "Hey I'm Ruzly's assistant. Currently I'm still in development, so I might not understand everything.",
-  help: "Available commands: skills · projects · experience · contact · hire · about · education · age · hobbies · work · where · age",
+  help: "Available commands: skills · projects · experience · contact · hire · about · education · age · work · where · age",
   hi: "Hey! 👋 Ask me anything about Ruzly.",
   hello: "Hello! What would you like to know about Ruzly?",
   skills: "Ruzly works with React, TypeScript, Next.js, Node.js, Python, PostgreSQL, Docker, and more.",
-  project: "He's shipped a Crop Market Monitoring System, a Lab Monitoring System, and is building ResearchAI & ArchiBoardPH.",
   experience: "Currently, Ruzly is OJT at Onecore Consultancy - NextCore Technology From May 2026 – present.",
   contact: "Reach him at macatulajohnruzly@gmail.com or linkedin.com/in/ruzly-macatula.",
   hire: "Ruzly is open to opportunities! Email macatulajohnruzly@gmail.com.",
   about: "Aspiring software engineer, 4th-year CS at UE Manila, passionate about clean thoughtful software.",
   education: "Ruzly is a 4th-year Computer Science student at the University of the East Manila.",
   age: "Ruzly was developed in the year 2005. He's 20 years old.",
-  hobbies: "he said sometimes he plays basketball, tennis, and goes to the gym and exploring new tech trends in his free time.",
   work: "Ruzly is currently OJT at Onecore Consultancy - NextCore Technology, where he contributes to web development projects and hones his skills in a professional setting. But he's open to work and new opportunities, so feel free to reach out!",
   where: "Ruzly is based in Manila PH, but he's open to remote opportunities worldwide!",
-  gf: "Ruzly has a GF named Jasmine. She's super nice and supportive of his journey!",
-  love: "Ruzly is currently in a relationship with his girlfriend Jasmine. They support each other a lot!",
   interest: "Ruzly is interested in software architecture, AI, cybersecurity, and more.",
 };
 
