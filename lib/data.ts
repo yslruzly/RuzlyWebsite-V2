@@ -48,7 +48,7 @@ export const SKILLS: SkillItem[] = [
     Icon: Terminal,
     name: "Backend",
     desc: "APIs built and tested behind deployed applications: authentication flows, RAG retrieval pipelines, and rate-limited public endpoints.",
-    tags: ["Node.js", "Python", "PostgreSQL", "Postman", "Prisma", "tRPC", "Docker", "Firebase", "Supabase"],
+    tags: ["Node.js", "Python", "PostgreSQL", "Postman", "Prisma", "tRPC", "Docker", "Firebase", "Supabase", "Upstash Redis"],
   },
   {
     Icon: Pencil,

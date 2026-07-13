@@ -16,6 +16,10 @@ My personal portfolio website
 - **Widgets** — a music and sports radio player and animated dot field.
 - Fully responsive across desktop and mobile.
 
+## Stack
+
+Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Motion · Three.js · Supabase (Postgres) · Upstash Redis · Vercel
+
 ## How the community chat fights spam
 
 All writes go through a single API route ([app/api/chat/route.ts](app/api/chat/route.ts)) using the Supabase service-role key — the anon key is read-only, so the moderation below can't be bypassed by posting straight to the database.
