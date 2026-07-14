@@ -70,7 +70,7 @@ export const projects: Project[] = [
     name: "AniSense",
     tagline: "Crop market monitoring for farmers",
     description:
-      "Mobile-based crop market monitoring application built as our group undergraduate thesis — price tracking, AI analytics, and market insights for Filipino farmers.",
+      "Mobile-based crop market monitoring app as group undergraduate thesis — price tracking, AI analytics, and market insights for farmers. (In progress).",
     stack: ["React Native", "TypeScript", "Tailwind", "PostgreSQL", "Capacitor", "Python", "TensorFlow"],
     kind: "Thesis / Mobile",
     image: "/images/Thesis.png",
@@ -83,7 +83,7 @@ export const projects: Project[] = [
     name: "NoteChat",
     tagline: "RAG-powered study assistant",
     description:
-      "Upload notes and ask questions. Features an AI eval dashboard that automatically scores every response for faithfulness, relevance, and completeness using an LLM-as-judge pipeline.",
+      "Upload notes and ask questions. Features an AI eval dashboard that automatically scores every response, uses an LLM-as-judge pipeline.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind", "Supabase", "Vercel"],
     kind: "AI / RAG",
     image: "/images/NoteChat.png",
@@ -124,7 +124,7 @@ export const projects: Project[] = [
     name: "PipWiseForex",
     tagline: "Read forex charts, candle by candle",
     description:
-      "A free, demo-first forex education site that teaches chart reading candle by candle — no signup walls, no signal selling, no hype.",
+      "free forex education site that teaches chart reading candle by candle — with a built-in charting tool that lets you practice reading charts in real time.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     kind: "Web / EdTech",
     image: "/images/PipWiseForex.png",
@@ -137,7 +137,7 @@ export const projects: Project[] = [
     name: "ArchiBoardPH",
     tagline: "Architecture board exam review",
     description:
-      "Architecture Board Exam review platform for Philippine examinees — curriculum, mock exams, and progress tracking. Currently in progress.",
+      "Architecture Board Exam review platform — curriculum, mock exams, and progress tracking. (In progress).",
     stack: ["React", "Next.js", "TypeScript", "Tailwind", "Supabase", "Vercel"],
     kind: "EdTech / In progress",
     image: "/images/ArchiBoardPH.png",
