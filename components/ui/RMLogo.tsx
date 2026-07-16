@@ -11,9 +11,9 @@ interface RMLogoProps {
 export default function RMLogo({ size = 40, className = "" }: RMLogoProps) {
   return (
     <svg
-      viewBox="12 12 100 92"
+      viewBox="12 12 100 80"
       width={size}
-      height={(size * 92) / 100}
+      height={(size * 70) / 100}
       fill="none"
       stroke="currentColor"
       strokeWidth={9}
