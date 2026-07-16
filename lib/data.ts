@@ -3,9 +3,6 @@ import {
   Cpu,
   Terminal,
   Pencil,
-  Sprout,
-  Computer,
-  CandlestickChart,
   type LucideIcon,
 } from "lucide-react";
 
@@ -23,8 +20,7 @@ export type Project = {
   description: string;
   stack: string[];
   kind: string;
-  image?: string;
-  Icon: LucideIcon;
+  image: string;
   github?: string;
   live?: string;
   featured?: boolean;
@@ -74,7 +70,6 @@ export const projects: Project[] = [
     stack: ["React Native", "TypeScript", "Tailwind", "PostgreSQL", "Capacitor", "Python", "TensorFlow"],
     kind: "Thesis / Mobile",
     image: "/images/Thesis.png",
-    Icon: Sprout,
     github: "https://github.com/yslruzly",
     featured: true,
   },
@@ -87,7 +82,6 @@ export const projects: Project[] = [
     stack: ["Next.js", "React", "TypeScript", "Tailwind", "Supabase", "Vercel"],
     kind: "AI / RAG",
     image: "/images/NoteChat.png",
-    Icon: Computer,
     github: "https://github.com/yslruzly/NoteChat",
     live: "https://note-chat-s.vercel.app",
     featured: true,
@@ -101,7 +95,6 @@ export const projects: Project[] = [
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Groq Llama", "Jina AI"],
     kind: "AI / Agent",
     image: "/images/ResearchAI.png",
-    Icon: Code2,
     github: "https://github.com/yslruzly",
     live: "https://researchai-rm.vercel.app",
     featured: true,
@@ -115,9 +108,8 @@ export const projects: Project[] = [
     stack: ["React", "TypeScript", "Tailwind", "Vite", "Vercel"],
     kind: "Web",
     image: "/images/Portfolio.png",
-    Icon: Sprout,
     github: "https://github.com/yslruzly/Portfolio-website",
-    live: "https://ruzly-macatula.vercel.app",
+    live: "https://ruzlymacatula.vercel.app",
   },
   {
     slug: "pipwiseforex",
@@ -128,7 +120,6 @@ export const projects: Project[] = [
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     kind: "Web / EdTech",
     image: "/images/PipWiseForex.png",
-    Icon: CandlestickChart,
     github: "https://github.com/yslruzly",
     live: "https://pipwise-forex.vercel.app",
   },
@@ -138,10 +129,9 @@ export const projects: Project[] = [
     tagline: "Architecture board exam review",
     description:
       "Architecture Board Exam review platform — curriculum, mock exams, and progress tracking. (In progress).",
-    stack: ["React", "Next.js", "TypeScript", "Tailwind", "Supabase", "Vercel"],
+    stack: ["React", "Next.js", "TypeScript", "Tailwind", "Neon", "Vercel"],
     kind: "EdTech / In progress",
     image: "/images/ArchiBoardPH.png",
-    Icon: Code2,
     github: "https://github.com/yslruzly",
   },
 ];

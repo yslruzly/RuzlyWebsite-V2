@@ -19,7 +19,6 @@ function SpotlightCard({
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: -400, y: -400 });
   const [hover, setHover] = useState(false);
-  const { Icon } = project;
 
   const onMove = (e: React.MouseEvent) => {
     const rect = ref.current?.getBoundingClientRect();
@@ -54,21 +53,15 @@ function SpotlightCard({
         }}
       />
 
-      {project.image ? (
-        <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-line">
-          <Image
-            src={project.image}
-            alt={`${project.name} screenshot`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover object-top grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
-          />
-        </div>
-      ) : (
-        <div className="flex aspect-[16/9] w-full items-center justify-center border-b border-line text-ash">
-          <Icon size={32} strokeWidth={1.5} />
-        </div>
-      )}
+      <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-line">
+        <Image
+          src={project.image}
+          alt={`${project.name} screenshot`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover object-top grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
+        />
+      </div>
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex items-baseline justify-between gap-4">
@@ -127,7 +120,6 @@ function ProjectModal({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const { Icon } = project;
 
   // while the modal is open: the page can't scroll, Esc closes it, and
   // focus jumps to the close button
@@ -182,21 +174,15 @@ function ProjectModal({
 
         <div className="overflow-y-auto">
           {/* screenshot */}
-          {project.image ? (
-            <div className="relative aspect-[16/9] w-full border-b border-line">
-              <Image
-                src={project.image}
-                alt={`${project.name} screenshot`}
-                fill
-                sizes="(max-width: 768px) 100vw, 640px"
-                className="object-cover object-top"
-              />
-            </div>
-          ) : (
-            <div className="flex aspect-[16/9] w-full items-center justify-center border-b border-line text-ash">
-              <Icon size={44} strokeWidth={1.5} />
-            </div>
-          )}
+          <div className="relative aspect-[16/9] w-full border-b border-line">
+            <Image
+              src={project.image}
+              alt={`${project.name} screenshot`}
+              fill
+              sizes="(max-width: 768px) 100vw, 640px"
+              className="object-cover object-top"
+            />
+          </div>
 
           <div className="p-6 sm:p-8">
             <div className="flex items-baseline justify-between gap-4">
