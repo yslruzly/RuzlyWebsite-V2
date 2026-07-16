@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Menu, X } from "lucide-react";
+import RMLogo from "@/components/ui/RMLogo";
 
 // The live Manila clock on the left side of the navbar. Clicking it scrolls
 // back to the top.
@@ -88,7 +89,16 @@ export default function Nav() {
         }`}
         aria-label="Main"
       >
-        <ManilaClock />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            className="flex cursor-pointer items-center text-paper transition-opacity duration-200 hover:opacity-70"
+          >
+            <RMLogo size={30} />
+          </button>
+          <ManilaClock />
+        </div>
 
         <div className="flex items-center">
           <ul className="hidden items-center gap-5 sm:gap-6 md:flex">

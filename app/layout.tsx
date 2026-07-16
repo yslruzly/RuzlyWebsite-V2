@@ -11,15 +11,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  icons: {
-    icon: [
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/site.webmanifest",
+  // Favicon + apple touch icon are auto-detected from app/icon.png and
+  // app/apple-icon.png via Next's file conventions — no manual links needed.
   title: "Ruzly Macatula — Aspiring AI & Software Engineer",
   description:
     "Hi, I'm Ruzly — an aspiring AI & software engineer and CS student in Manila, turning ideas into RAG-powered, full-stack web and mobile apps.",
