@@ -77,16 +77,14 @@ export default function Nav() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        detached ? "px-4 pt-3 sm:px-6" : "px-0 pt-0"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${detached ? "px-4 pt-3 sm:px-6" : "px-0 pt-0"
+        }`}
     >
       <nav
-        className={`mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          detached
-            ? "h-13 max-w-4xl rounded-full border border-paper/25 bg-ink/80 px-5 shadow-[0_0_18px_rgba(255,255,255,0.12),inset_0_0_10px_rgba(255,255,255,0.04),0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-7"
-            : "h-16 max-w-6xl bg-transparent px-5 sm:px-8"
-        }`}
+        className={`mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${detached
+          ? "h-13 max-w-4xl rounded-2xl border border-paper/25 bg-ink/80 px-5 shadow-[0_0_18px_rgba(255,255,255,0.12),inset_0_0_10px_rgba(255,255,255,0.04),0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:px-7"
+          : "h-16 max-w-6xl bg-transparent px-5 sm:px-8"
+          }`}
         aria-label="Main"
       >
         <div className="flex items-center gap-3 sm:gap-4">
@@ -129,11 +127,10 @@ export default function Nav() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className={`mx-auto backdrop-blur-md md:hidden ${
-            detached
-              ? "mt-2 max-w-4xl rounded-2xl border border-line bg-ink/90"
-              : "border-t border-line bg-ink/95"
-          }`}
+          className={`mx-auto backdrop-blur-md md:hidden ${detached
+            ? "mt-2 max-w-4xl rounded-2xl border border-line bg-ink/90"
+            : "border-t border-line bg-ink/95"
+            }`}
         >
           <div className="mx-auto flex max-w-6xl flex-col px-5 py-3">
             {sections.map((s) => (
