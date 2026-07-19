@@ -49,7 +49,7 @@ export const SKILLS: SkillItem[] = [
   {
     Icon: Pencil,
     name: "Design & Media",
-    desc: "Working knowledge of Figma, Photoshop, and Blender — enough to create graphics, mock up interfaces, and handle basic 3D when a project needs it.",
+    desc: "Enough to create graphics for branding, mock up interfaces, and handle basic 3D when a project needs it.",
     tags: ["Figma", "Canva", "Adobe PS", "Blender"],
   },
   {
