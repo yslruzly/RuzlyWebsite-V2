@@ -46,7 +46,7 @@ export default function About() {
                 skills.
               </p>
               <p className="font-mono text-xs tracking-wide text-ash">
-                Try the terminal → ask it about my skills, projects, experience or try typing test!.
+                Try the terminal → ask it about my skills, projects or try typing test!.
               </p>
             </div>
           </Reveal>
