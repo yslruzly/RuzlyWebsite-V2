@@ -74,16 +74,16 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    slug: "notechat",
-    name: "NoteChat",
+    slug: "recallai",
+    name: "RecallAI",
     tagline: "RAG-powered study assistant",
     description:
       "Upload notes and ask questions. Features an AI eval dashboard that automatically scores every response, uses an LLM-as-judge pipeline.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind", "Supabase", "Vercel"],
     kind: "AI / RAG",
-    image: "/images/NoteChat.png",
-    github: "https://github.com/yslruzly/NoteChat",
-    live: "https://note-chat-s.vercel.app",
+    image: "/images/RecallAI.png",
+    github: "https://github.com/yslruzly/RecallAI",
+    live: "https://recall-ai.vercel.app",
     featured: true,
   },
   {
