@@ -83,7 +83,7 @@ export const projects: Project[] = [
     kind: "AI / RAG",
     image: "/images/RecallAI.png",
     github: "https://github.com/yslruzly/RecallAI",
-    live: "https://recall-ai.vercel.app",
+    live: "https://recall-ai-cyan.vercel.app",
     featured: true,
   },
   {
