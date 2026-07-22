@@ -81,7 +81,7 @@ export const projects: Project[] = [
       "Upload notes and ask questions. Features an AI eval dashboard that automatically scores every response, uses an LLM-as-judge pipeline.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind", "Supabase", "Vercel"],
     kind: "AI / RAG",
-    image: "/images/NoteChat.png",
+    image: "/images/RecallAI.png",
     github: "https://github.com/yslruzly/RecallAI",
     live: "https://recall-ai-cyan.vercel.app",
     featured: true,
