@@ -11,9 +11,9 @@ My personal portfolio website
 - **Terminal hero** — a macOS-style terminal that animates through commands.
 - **ASCII globe** — a rotating globe rendered entirely in ASCII characters.
 - **Chatbot** — a chat widget framed inside a MacBook mockup.
-- **Community chat** — a public guestbook with a defended write path (see below).
-- **Projects** — featured works like NoteChat, ResearchAI, and PipWise.
-- **Widgets** — a music and sports radio player and animated dot field.
+- **Community chat** — a guestbook with a defended write path (see below).
+- **Projects** — featured works like RecallAI, ResearchAI, and AniSense.
+- **Widgets** — a music and sports radio player.
 - Fully responsive across desktop and mobile.
 
 ## Stack
@@ -22,7 +22,7 @@ Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Motion ·
 
 ## How the community chat fights spam
 
-All writes go through a single API route ([app/api/chat/route.ts](app/api/chat/route.ts)) using the Supabase service-role key — the anon key is read-only, so the moderation below can't be bypassed by posting straight to the database.
+All writes go through a single API route ([app/api/chat/route.ts](app/api/chat/route.ts)) using the Supabase service-role key, the anon key is read-only, so the moderation below can't be bypassed by posting straight to the database.
 
 Spam is handled in layers:
 
