@@ -37,7 +37,7 @@ export const SKILLS: SkillItem[] = [
   {
     Icon: Code2,
     name: "Frontend",
-    desc: "Dashboards, landing pages, and interactive tools — with the animations, loading states, and small details that make a UI feel finished.",
+    desc: "I build dashboards, landing pages, and interactive tools, then polish the animations, loading states, and empty states until they feel done.",
     tags: ["React", "TypeScript", "Next.js", "Tailwind", "Flutter"],
   },
   {
