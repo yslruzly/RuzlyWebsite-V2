@@ -186,7 +186,7 @@ export default function CommunityChat() {
               Leave a <span className="text-mist">message.</span>
             </h2>
             <p className="mt-6 max-w-md font-jet text-base text-mist">
-              Say hi, leave a note, see who else is here. No account, no signup — just a name and a message.
+              Say Hi, Drop your name and say something. Everyone who visits can see it.
             </p>
             <p className="mt-8 flex items-center gap-2.5 font-mono text-xs text-ash">
               <span className="relative flex h-2 w-2">
@@ -201,7 +201,7 @@ export default function CommunityChat() {
             <div className="flex h-[70dvh] max-h-110 min-h-90 flex-col overflow-hidden rounded-xl border border-line bg-surface sm:h-110">
               <div className="flex items-center justify-between border-b border-line px-4 py-2.5 font-mono text-[11px] text-ash">
                 <span>💬 {messages.length} messages</span>
-                <span>public · be kind</span>
+                <span>Public · be kind</span>
               </div>
 
               <div
@@ -318,12 +318,12 @@ export default function CommunityChat() {
                         ownerKey
                           ? "/images/pfp.jpg"
                           : // same name#id seed the server saves, so the
-                            // preview face matches the one that gets posted
-                            avatarFor(
-                              visitorId
-                                ? `${confirmedName}#${visitorId}`
-                                : confirmedName,
-                            )
+                          // preview face matches the one that gets posted
+                          avatarFor(
+                            visitorId
+                              ? `${confirmedName}#${visitorId}`
+                              : confirmedName,
+                          )
                       }
                       alt={`Posting as ${confirmedName}`}
                       className="h-6 w-6 rounded-full bg-paper/10 object-cover"
