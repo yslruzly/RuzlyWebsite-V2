@@ -38,7 +38,7 @@ export const SKILLS: SkillItem[] = [
     Icon: Code2,
     name: "Frontend",
     desc: "Dashboards, landing pages, and interactive tools — with the animations, loading states, and small details that make a UI feel finished.",
-    tags: ["React", "TypeScript", "Next.js", "Tailwind"],
+    tags: ["React", "TypeScript", "Next.js", "Tailwind", "Flutter"],
   },
   {
     Icon: Terminal,
@@ -56,7 +56,7 @@ export const SKILLS: SkillItem[] = [
     Icon: Cpu,
     name: "Infrastructure",
     desc: "I deploy and run on Vercel — CI/CD from GitHub, preview builds, environment management — with AWS fundamentals for when projects outgrow it.",
-    tags: ["AWS", "Vercel"],
+    tags: ["Git", "GitHub", "AWS", "Vercel"],
   },
 ];
 

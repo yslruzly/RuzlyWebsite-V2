@@ -24,5 +24,8 @@ export const TECH_ICONS: Record<string, string> = {
   "Firebase":     "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-original.svg",
   "tRPC":         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trpc/trpc-original.svg",
   "Figma":        "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+  "Flutter":      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg",
+  "Git":          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+  "GitHub":       "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
   "Upstash Redis":"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/upstash.svg",
 };
