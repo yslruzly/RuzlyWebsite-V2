@@ -116,6 +116,7 @@ const MacbookChatbot: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(10);
   const desktopRef = useRef<HTMLDivElement>(null);
+  const termRef = useRef<HTMLDivElement>(null);
   const testInputRef = useRef<HTMLInputElement>(null);
   const typedRef = useRef("");
   const passageRef = useRef("");
@@ -172,11 +173,15 @@ const MacbookChatbot: FC = () => {
     const onMove = (e: MouseEvent) => {
       if (!desktop) return;
       const rect = desktop.getBoundingClientRect();
-      // clamp so the terminal can't be dragged out of the desktop — keeps the
-      // title bar grabbable and the input on screen
+      // clamp so the terminal stays fully inside the desktop — measure its real
+      // size so no part can be dragged off the right/bottom edge (where
+      // overflow:clip would just cut it and leave a gap of wallpaper)
+      const term = termRef.current;
+      const maxX = Math.max(0, rect.width - (term?.offsetWidth ?? 0));
+      const maxY = Math.max(0, rect.height - (term?.offsetHeight ?? 0));
       setTermPos({
-        x: Math.min(Math.max(0, e.clientX - rect.left - dragOffset.x), rect.width - 120),
-        y: Math.min(Math.max(28, e.clientY - rect.top - dragOffset.y), rect.height - 40),
+        x: Math.min(Math.max(0, e.clientX - rect.left - dragOffset.x), maxX),
+        y: Math.min(Math.max(0, e.clientY - rect.top - dragOffset.y), maxY),
       });
     };
     const onUp = () => setDragging(false);
@@ -494,6 +499,7 @@ const MacbookChatbot: FC = () => {
 
               {/* ══ TERMINAL WINDOW ══ */}
               <div
+                ref={termRef}
                 style={{
                   position: "absolute",
                   left: termPos.x,
