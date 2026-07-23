@@ -91,7 +91,7 @@ export const projects: Project[] = [
     name: "ResearchAI",
     tagline: "Agentic research, not search results",
     description:
-      "Type a topic and get a short research report with linked sources. It searches the live web and reads the pages — anything that fails to load is excluded, so the report only reflects what actually got read.",
+      "Type a topic and get a short research report with linked sources. It searches the live web and reads the pages, the report only reflects what actually got read and pages failed to load is excluded.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Groq Llama", "Jina AI"],
     kind: "AI / Agent",
     image: "/images/ResearchAI.png",
@@ -104,7 +104,7 @@ export const projects: Project[] = [
     name: "Portfolio Website",
     tagline: "Version 1 of this site",
     description:
-      "A modern portfolio website showcasing my work and skills — the first version of the site you're looking at right now.",
+      "A modern portfolio website showcasing my work and skills. The first version of the site you're looking at right now.",
     stack: ["React", "TypeScript", "Tailwind", "Vite", "Vercel"],
     kind: "Web",
     image: "/images/Portfolio.png",
@@ -116,7 +116,7 @@ export const projects: Project[] = [
     name: "PipWiseForex",
     tagline: "Read forex charts, candle by candle",
     description:
-      "free forex education site that teaches chart reading candle by candle — with a built-in charting tool that lets you practice reading charts in real time.",
+      "Personal forex course that teaches chart reading candle by candle, with a built-in charting tool that lets you practice reading charts.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     kind: "Web / EdTech",
     image: "/images/PipWiseForex.png",
